@@ -1032,3 +1032,428 @@ function Alcancias({ sesion, onVolver }) {
             ) {
               cerrarFormulario();
             }
+          }}
+        >
+
+          <div className="alcancias-modal">
+
+            <div className="alcancias-modal-header">
+
+              <div>
+                <span>MI DINERO</span>
+
+                <h2>
+                  {alcanciaEditando
+                    ? "Editar alcancía"
+                    : "Nueva alcancía"}
+                </h2>
+              </div>
+
+              <button
+                type="button"
+                onClick={cerrarFormulario}
+                disabled={guardando}
+              >
+                ×
+              </button>
+
+            </div>
+
+            <form onSubmit={guardarAlcancia}>
+
+              <div className="alcancias-form-group">
+
+                <label htmlFor="alcancia-nombre">
+                  Nombre de la alcancía
+                </label>
+
+                <input
+                  id="alcancia-nombre"
+                  type="text"
+                  value={formulario.nombre}
+                  onChange={(event) =>
+                    cambiarFormulario(
+                      "nombre",
+                      event.target.value
+                    )
+                  }
+                  placeholder="Ej. Mi ahorro"
+                  disabled={guardando}
+                  autoFocus
+                />
+
+              </div>
+
+              <div className="alcancias-form-group">
+
+                <label htmlFor="alcancia-fecha">
+                  Fecha objetivo
+                </label>
+
+                <input
+                  id="alcancia-fecha"
+                  type="date"
+                  value={
+                    formulario.fecha_objetivo
+                  }
+                  onChange={(event) =>
+                    cambiarFormulario(
+                      "fecha_objetivo",
+                      event.target.value
+                    )
+                  }
+                  disabled={guardando}
+                />
+
+              </div>
+
+              <div className="alcancias-form-group">
+
+                <label htmlFor="alcancia-objetivo">
+                  Monto objetivo
+                  <small>
+                    {" "}
+                    (opcional)
+                  </small>
+                </label>
+
+                <input
+                  id="alcancia-objetivo"
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={
+                    formulario.monto_objetivo
+                  }
+                  onChange={(event) =>
+                    cambiarFormulario(
+                      "monto_objetivo",
+                      event.target.value
+                    )
+                  }
+                  placeholder="Ej. 500000"
+                  disabled={guardando}
+                />
+
+                <small>
+                  Puedes dejarlo vacío si solo
+                  quieres ahorrar hasta la fecha.
+                </small>
+
+              </div>
+
+              <div className="alcancias-form-group">
+
+                <label htmlFor="alcancia-descripcion">
+                  Descripción
+                </label>
+
+                <textarea
+                  id="alcancia-descripcion"
+                  rows="3"
+                  value={
+                    formulario.descripcion
+                  }
+                  onChange={(event) =>
+                    cambiarFormulario(
+                      "descripcion",
+                      event.target.value
+                    )
+                  }
+                  placeholder="Opcional"
+                  disabled={guardando}
+                ></textarea>
+
+              </div>
+
+              <div className="alcancias-modal-buttons">
+
+                <button
+                  type="button"
+                  className="alcancias-secondary-button"
+                  onClick={cerrarFormulario}
+                  disabled={guardando}
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="submit"
+                  className="alcancias-primary-button"
+                  disabled={guardando}
+                >
+                  {guardando
+                    ? "Guardando..."
+                    : alcanciaEditando
+                    ? "Guardar cambios"
+                    : "Crear alcancía"}
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+      )}
+
+      {alcanciaParaMovimiento && (
+        <div
+          className="alcancias-modal-overlay"
+          onMouseDown={(event) => {
+            if (
+              event.target ===
+                event.currentTarget &&
+              !guardandoMovimiento
+            ) {
+              cerrarMovimiento();
+            }
+          }}
+        >
+
+          <div className="alcancias-modal">
+
+            <div className="alcancias-modal-header">
+
+              <div>
+                <span>AHORRO</span>
+
+                <h2>
+                  {tipoMovimiento ===
+                  "aporte"
+                    ? "Aportar dinero"
+                    : "Retirar dinero"}
+                </h2>
+
+                <p>
+                  {alcanciaParaMovimiento.nombre}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={cerrarMovimiento}
+                disabled={
+                  guardandoMovimiento
+                }
+              >
+                ×
+              </button>
+
+            </div>
+
+            <div className="alcancia-movimiento-resumen">
+
+              <div>
+                <span>
+                  Saldo actual
+                </span>
+
+                <strong>
+                  {formatearMoneda(
+                    calcularSaldo(
+                      alcanciaParaMovimiento.id
+                    )
+                  )}
+                </strong>
+              </div>
+
+              {alcanciaParaMovimiento.monto_objetivo && (
+                <div>
+                  <span>
+                    Objetivo
+                  </span>
+
+                  <strong>
+                    {formatearMoneda(
+                      alcanciaParaMovimiento.monto_objetivo
+                    )}
+                  </strong>
+                </div>
+              )}
+
+            </div>
+
+            <form
+              onSubmit={guardarMovimiento}
+            >
+
+              <div className="alcancias-form-group">
+
+                <label>
+                  Tipo de movimiento
+                </label>
+
+                <div className="alcancia-tipo-buttons">
+
+                  <button
+                    type="button"
+                    className={
+                      tipoMovimiento ===
+                      "aporte"
+                        ? "alcancia-tipo-button active"
+                        : "alcancia-tipo-button"
+                    }
+                    onClick={() =>
+                      setTipoMovimiento(
+                        "aporte"
+                      )
+                    }
+                    disabled={
+                      guardandoMovimiento
+                    }
+                  >
+                    + Aporte
+                  </button>
+
+                  <button
+                    type="button"
+                    className={
+                      tipoMovimiento ===
+                      "retiro"
+                        ? "alcancia-tipo-button active retiro"
+                        : "alcancia-tipo-button"
+                    }
+                    onClick={() =>
+                      setTipoMovimiento(
+                        "retiro"
+                      )
+                    }
+                    disabled={
+                      guardandoMovimiento
+                    }
+                  >
+                    − Retiro
+                  </button>
+
+                </div>
+
+              </div>
+
+              <div className="alcancias-form-group">
+
+                <label htmlFor="movimiento-alcancia-monto">
+                  Monto
+                </label>
+
+                <input
+                  id="movimiento-alcancia-monto"
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={
+                    montoMovimiento
+                  }
+                  onChange={(event) =>
+                    setMontoMovimiento(
+                      event.target.value
+                    )
+                  }
+                  placeholder="Ej. 20000"
+                  disabled={
+                    guardandoMovimiento
+                  }
+                  autoFocus
+                />
+
+              </div>
+
+              <div className="alcancias-form-group">
+
+                <label htmlFor="movimiento-alcancia-fecha">
+                  Fecha
+                </label>
+
+                <input
+                  id="movimiento-alcancia-fecha"
+                  type="date"
+                  value={
+                    fechaMovimiento
+                  }
+                  onChange={(event) =>
+                    setFechaMovimiento(
+                      event.target.value
+                    )
+                  }
+                  disabled={
+                    guardandoMovimiento
+                  }
+                />
+
+              </div>
+
+              <div className="alcancias-form-group">
+
+                <label htmlFor="movimiento-alcancia-descripcion">
+                  Descripción
+                </label>
+
+                <textarea
+                  id="movimiento-alcancia-descripcion"
+                  rows="3"
+                  value={
+                    descripcionMovimiento
+                  }
+                  onChange={(event) =>
+                    setDescripcionMovimiento(
+                      event.target.value
+                    )
+                  }
+                  placeholder={
+                    tipoMovimiento ===
+                    "aporte"
+                      ? "Ej. Ahorro de esta semana"
+                      : "Ej. Necesité retirar dinero"
+                  }
+                  disabled={
+                    guardandoMovimiento
+                  }
+                ></textarea>
+
+              </div>
+
+              <div className="alcancias-modal-buttons">
+
+                <button
+                  type="button"
+                  className="alcancias-secondary-button"
+                  onClick={
+                    cerrarMovimiento
+                  }
+                  disabled={
+                    guardandoMovimiento
+                  }
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="submit"
+                  className="alcancias-primary-button"
+                  disabled={
+                    guardandoMovimiento
+                  }
+                >
+                  {guardandoMovimiento
+                    ? "Guardando..."
+                    : tipoMovimiento ===
+                      "aporte"
+                    ? "Registrar aporte"
+                    : "Registrar retiro"}
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+      )}
+
+    </div>
+  );
+}
+
+export default Alcancias;
