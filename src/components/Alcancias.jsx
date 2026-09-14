@@ -61,17 +61,127 @@ function Alcancias({ sesion, onVolver }) {
 
   const usuarioId = sesion?.user?.id;
 
+  const formatearMoneda = (valor) => {
+    return new Intl.NumberFormat("es-CO", {
+      style: "currency",
+      currency: "COP",
+      maximumFractionDigits: 0,
+    }).format(Number(valor) || 0);
+  };
+
+  const formatearFecha = (fecha) => {
+    if (!fecha) return "Sin fecha";
+
+    const [anio, mes, dia] = fecha.split("-");
+
+    return `${dia}/${mes}/${anio}`;
+  };
+
+  const obtenerEstadoFecha = (fecha) => {
+    if (!fecha) return "";
+
+    const hoy = obtenerFechaLocal();
+
+    if (fecha < hoy) {
+      return "vencida";
+    }
+
+    if (fecha === hoy) {
+      return "hoy";
+    }
+
+    return "activa";
+  };
+
+  const calcularSaldo = (alcanciaId) => {
+    const lista = movimientos[alcanciaId] || [];
+
+    return lista.reduce((total, movimiento) => {
+      const monto = Number(movimiento.monto) || 0;
+
+      if (movimiento.tipo === "aporte") {
+        return total + monto;
+      }
+
+      return total - monto;
+    }, 0);
+  };
+
+  const calcularPlanAhorro = (
+    saldo,
+    objetivo,
+    fechaObjetivo
+  ) => {
+    if (
+      objetivo === null ||
+      !Number.isFinite(objetivo) ||
+      objetivo <= 0 ||
+      !fechaObjetivo ||
+      saldo >= objetivo
+    ) {
+      return null;
+    }
+
+    const hoy = new Date(`${obtenerFechaLocal()}T00:00:00`);
+    const fechaMeta = new Date(
+      `${fechaObjetivo}T00:00:00`
+    );
+
+    const diferencia =
+      fechaMeta.getTime() - hoy.getTime();
+
+    const diasRestantes = Math.ceil(
+      diferencia / (1000 * 60 * 60 * 24)
+    );
+
+    const faltante = Math.max(0, objetivo - saldo);
+
+    if (diasRestantes <= 0 || faltante <= 0) {
+      return null;
+    }
+
+    const ahorroDiario =
+      faltante / diasRestantes;
+
+    const semanasRestantes =
+      diasRestantes / 7;
+
+    const quincenasRestantes =
+      diasRestantes / 15;
+
+    const ahorroSemanal =
+      semanasRestantes > 0
+        ? faltante / semanasRestantes
+        : faltante;
+
+    const ahorroQuincenal =
+      quincenasRestantes > 0
+        ? faltante / quincenasRestantes
+        : faltante;
+
+    return {
+      faltante,
+      diasRestantes,
+      ahorroDiario,
+      ahorroSemanal,
+      ahorroQuincenal,
+    };
+  };
+
   const cargarAlcancias = async () => {
     if (!usuarioId) return;
 
     setCargando(true);
     setError("");
 
-    const { data, error: errorConsulta } = await supabase
-      .from("alcancias")
-      .select("*")
-      .eq("usuario_id", usuarioId)
-      .order("fecha_objetivo", { ascending: true });
+    const { data, error: errorConsulta } =
+      await supabase
+        .from("alcancias")
+        .select("*")
+        .eq("usuario_id", usuarioId)
+        .order("fecha_objetivo", {
+          ascending: true,
+        });
 
     if (errorConsulta) {
       console.error(
@@ -79,7 +189,9 @@ function Alcancias({ sesion, onVolver }) {
         errorConsulta
       );
 
-      setError("No fue posible cargar tus alcancías.");
+      setError(
+        "No fue posible cargar tus alcancías."
+      );
       setAlcancias([]);
     } else {
       setAlcancias(data || []);
@@ -100,13 +212,18 @@ function Alcancias({ sesion, onVolver }) {
       [alcanciaId]: true,
     }));
 
-    const { data, error: errorConsulta } = await supabase
-      .from("movimientos_alcancia")
-      .select("*")
-      .eq("usuario_id", usuarioId)
-      .eq("alcancia_id", alcanciaId)
-      .order("fecha", { ascending: false })
-      .order("created_at", { ascending: false });
+    const { data, error: errorConsulta } =
+      await supabase
+        .from("movimientos_alcancia")
+        .select("*")
+        .eq("usuario_id", usuarioId)
+        .eq("alcancia_id", alcanciaId)
+        .order("fecha", {
+          ascending: false,
+        })
+        .order("created_at", {
+          ascending: false,
+        });
 
     if (errorConsulta) {
       console.error(
@@ -185,12 +302,25 @@ function Alcancias({ sesion, onVolver }) {
         : Number(formulario.monto_objetivo);
 
     if (!nombre) {
-      setError("Escribe el nombre de la alcancía.");
+      setError(
+        "Escribe el nombre de la alcancía."
+      );
       return;
     }
 
     if (!formulario.fecha_objetivo) {
-      setError("Selecciona una fecha objetivo.");
+      setError(
+        "Selecciona una fecha objetivo."
+      );
+      return;
+    }
+
+    const hoy = obtenerFechaLocal();
+
+    if (formulario.fecha_objetivo < hoy) {
+      setError(
+        "La fecha objetivo no puede ser anterior a hoy."
+      );
       return;
     }
 
@@ -210,26 +340,32 @@ function Alcancias({ sesion, onVolver }) {
     const datos = {
       usuario_id: usuarioId,
       nombre,
-      fecha_objetivo: formulario.fecha_objetivo,
+      fecha_objetivo:
+        formulario.fecha_objetivo,
       monto_objetivo: montoObjetivo,
       descripcion:
         formulario.descripcion.trim() || null,
     };
 
     if (alcanciaEditando) {
-      const { data, error: errorActualizacion } =
-        await supabase
-          .from("alcancias")
-          .update({
-            nombre: datos.nombre,
-            fecha_objetivo: datos.fecha_objetivo,
-            monto_objetivo: datos.monto_objetivo,
-            descripcion: datos.descripcion,
-          })
-          .eq("id", alcanciaEditando.id)
-          .eq("usuario_id", usuarioId)
-          .select()
-          .single();
+      const {
+        data,
+        error: errorActualizacion,
+      } = await supabase
+        .from("alcancias")
+        .update({
+          nombre: datos.nombre,
+          fecha_objetivo:
+            datos.fecha_objetivo,
+          monto_objetivo:
+            datos.monto_objetivo,
+          descripcion:
+            datos.descripcion,
+        })
+        .eq("id", alcanciaEditando.id)
+        .eq("usuario_id", usuarioId)
+        .select()
+        .single();
 
       if (errorActualizacion) {
         console.error(
@@ -243,7 +379,8 @@ function Alcancias({ sesion, onVolver }) {
       } else {
         setAlcancias((anteriores) =>
           anteriores.map((alcancia) =>
-            alcancia.id === alcanciaEditando.id
+            alcancia.id ===
+            alcanciaEditando.id
               ? data
               : alcancia
           )
@@ -256,15 +393,17 @@ function Alcancias({ sesion, onVolver }) {
         cerrarFormulario();
       }
     } else {
-      const { data, error: errorInsercion } =
-        await supabase
-          .from("alcancias")
-          .insert({
-            ...datos,
-            estado: "activa",
-          })
-          .select()
-          .single();
+      const {
+        data,
+        error: errorInsercion,
+      } = await supabase
+        .from("alcancias")
+        .insert({
+          ...datos,
+          estado: "activa",
+        })
+        .select()
+        .single();
 
       if (errorInsercion) {
         console.error(
@@ -277,13 +416,15 @@ function Alcancias({ sesion, onVolver }) {
         );
       } else {
         setAlcancias((anteriores) =>
-          [...anteriores, data].sort((a, b) => {
-            return (
-              a.fecha_objetivo || ""
-            ).localeCompare(
-              b.fecha_objetivo || ""
-            );
-          })
+          [...anteriores, data].sort(
+            (a, b) => {
+              return (
+                a.fecha_objetivo || ""
+              ).localeCompare(
+                b.fecha_objetivo || ""
+              );
+            }
+          )
         );
 
         setMensaje(
@@ -295,20 +436,6 @@ function Alcancias({ sesion, onVolver }) {
     }
 
     setGuardando(false);
-  };
-
-  const calcularSaldo = (alcanciaId) => {
-    const lista = movimientos[alcanciaId] || [];
-
-    return lista.reduce((total, movimiento) => {
-      const monto = Number(movimiento.monto) || 0;
-
-      if (movimiento.tipo === "aporte") {
-        return total + monto;
-      }
-
-      return total - monto;
-    }, 0);
   };
 
   const obtenerMovimientosSiEsNecesario = async (
@@ -333,7 +460,9 @@ function Alcancias({ sesion, onVolver }) {
     setAlcanciaParaMovimiento(alcancia);
     setTipoMovimiento(tipo);
     setMontoMovimiento("");
-    setFechaMovimiento(obtenerFechaLocal());
+    setFechaMovimiento(
+      obtenerFechaLocal()
+    );
     setDescripcionMovimiento("");
   };
 
@@ -342,7 +471,9 @@ function Alcancias({ sesion, onVolver }) {
 
     setAlcanciaParaMovimiento(null);
     setMontoMovimiento("");
-    setFechaMovimiento(obtenerFechaLocal());
+    setFechaMovimiento(
+      obtenerFechaLocal()
+    );
     setDescripcionMovimiento("");
   };
 
@@ -369,7 +500,9 @@ function Alcancias({ sesion, onVolver }) {
     }
 
     if (!fechaMovimiento) {
-      setError("Selecciona la fecha.");
+      setError(
+        "Selecciona la fecha."
+      );
       return;
     }
 
@@ -391,21 +524,24 @@ function Alcancias({ sesion, onVolver }) {
 
     setGuardandoMovimiento(true);
 
-    const { data, error: errorInsercion } =
-      await supabase
-        .from("movimientos_alcancia")
-        .insert({
-          usuario_id: usuarioId,
-          alcancia_id:
-            alcanciaParaMovimiento.id,
-          tipo: tipoMovimiento,
-          monto,
-          fecha: fechaMovimiento,
-          descripcion:
-            descripcionMovimiento.trim() || null,
-        })
-        .select()
-        .single();
+    const {
+      data,
+      error: errorInsercion,
+    } = await supabase
+      .from("movimientos_alcancia")
+      .insert({
+        usuario_id: usuarioId,
+        alcancia_id:
+          alcanciaParaMovimiento.id,
+        tipo: tipoMovimiento,
+        monto,
+        fecha: fechaMovimiento,
+        descripcion:
+          descripcionMovimiento.trim() ||
+          null,
+      })
+      .select()
+      .single();
 
     if (errorInsercion) {
       console.error(
@@ -433,7 +569,9 @@ function Alcancias({ sesion, onVolver }) {
         const fechaB = b.fecha || "";
 
         if (fechaA !== fechaB) {
-          return fechaB.localeCompare(fechaA);
+          return fechaB.localeCompare(
+            fechaA
+          );
         }
 
         return (
@@ -454,7 +592,9 @@ function Alcancias({ sesion, onVolver }) {
     setGuardandoMovimiento(false);
   };
 
-  const eliminarAlcancia = async (alcancia) => {
+  const eliminarAlcancia = async (
+    alcancia
+  ) => {
     if (!usuarioId) return;
 
     const confirmar = window.confirm(
@@ -466,12 +606,13 @@ function Alcancias({ sesion, onVolver }) {
     setMensaje("");
     setError("");
 
-    const { error: errorEliminacion } =
-      await supabase
-        .from("alcancias")
-        .delete()
-        .eq("id", alcancia.id)
-        .eq("usuario_id", usuarioId);
+    const {
+      error: errorEliminacion,
+    } = await supabase
+      .from("alcancias")
+      .delete()
+      .eq("id", alcancia.id)
+      .eq("usuario_id", usuarioId);
 
     if (errorEliminacion) {
       console.error(
@@ -503,7 +644,9 @@ function Alcancias({ sesion, onVolver }) {
     );
   };
 
-  const alternarMovimientos = async (alcanciaId) => {
+  const alternarMovimientos = async (
+    alcanciaId
+  ) => {
     const estaAbierta =
       alcanciasAbiertas[alcanciaId];
 
@@ -520,52 +663,23 @@ function Alcancias({ sesion, onVolver }) {
     }
   };
 
-  const formatearMoneda = (valor) => {
-    return new Intl.NumberFormat("es-CO", {
-      style: "currency",
-      currency: "COP",
-      maximumFractionDigits: 0,
-    }).format(Number(valor) || 0);
-  };
-
-  const formatearFecha = (fecha) => {
-    if (!fecha) return "Sin fecha";
-
-    const [anio, mes, dia] =
-      fecha.split("-");
-
-    return `${dia}/${mes}/${anio}`;
-  };
-
-  const obtenerEstadoFecha = (fecha) => {
-    if (!fecha) return "";
-
-    const hoy = obtenerFechaLocal();
-
-    if (fecha < hoy) {
-      return "vencida";
-    }
-
-    if (fecha === hoy) {
-      return "hoy";
-    }
-
-    return "activa";
-  };
-
   const resumen = useMemo(() => {
     let totalAhorrado = 0;
     let totalObjetivos = 0;
-    let totalAlcancias = alcancias.length;
+    const totalAlcancias =
+      alcancias.length;
 
     alcancias.forEach((alcancia) => {
-      const saldo = calcularSaldo(alcancia.id);
+      const saldo = calcularSaldo(
+        alcancia.id
+      );
 
       totalAhorrado += saldo;
 
       if (alcancia.monto_objetivo) {
-        totalObjetivos +=
-          Number(alcancia.monto_objetivo);
+        totalObjetivos += Number(
+          alcancia.monto_objetivo
+        );
       }
     });
 
@@ -615,8 +729,8 @@ function Alcancias({ sesion, onVolver }) {
             <h1>Mis alcancías</h1>
 
             <p>
-              Guarda dinero poco a poco y aporta
-              cuando tengas disponible.
+              Guarda dinero poco a poco y
+              aporta cuando tengas disponible.
             </p>
           </div>
 
@@ -691,8 +805,9 @@ function Alcancias({ sesion, onVolver }) {
             <h2>Aún no tienes alcancías</h2>
 
             <p>
-              Crea una alcancía y empieza a guardar
-              dinero cuando tengas disponible.
+              Crea una alcancía y empieza a
+              guardar dinero cuando tengas
+              disponible.
             </p>
 
             <button
@@ -709,7 +824,9 @@ function Alcancias({ sesion, onVolver }) {
 
             {alcancias.map((alcancia) => {
               const saldo =
-                calcularSaldo(alcancia.id);
+                calcularSaldo(
+                  alcancia.id
+                );
 
               const objetivo =
                 alcancia.monto_objetivo
@@ -729,6 +846,13 @@ function Alcancias({ sesion, onVolver }) {
                       )
                     )
                   : null;
+
+              const planAhorro =
+                calcularPlanAhorro(
+                  saldo,
+                  objetivo,
+                  alcancia.fecha_objetivo
+                );
 
               const estadoFecha =
                 obtenerEstadoFecha(
@@ -753,9 +877,11 @@ function Alcancias({ sesion, onVolver }) {
                       <span
                         className={`alcancia-status ${estadoFecha}`}
                       >
-                        {estadoFecha === "vencida"
+                        {estadoFecha ===
+                        "vencida"
                           ? "Fecha cumplida"
-                          : estadoFecha === "hoy"
+                          : estadoFecha ===
+                            "hoy"
                           ? "Es hoy"
                           : "Activa"}
                       </span>
@@ -863,6 +989,84 @@ function Alcancias({ sesion, onVolver }) {
                         </span>
 
                       </div>
+
+                      {planAhorro && (
+                        <div className="alcancia-plan-ahorro">
+
+                          <div className="alcancia-plan-header">
+                            <div>
+                              <span>
+                                PLAN DE AHORRO
+                              </span>
+
+                              <h3>
+                                Para alcanzar tu objetivo
+                              </h3>
+                            </div>
+
+                            <strong>
+                              {planAhorro.diasRestantes}{" "}
+                              {planAhorro.diasRestantes ===
+                              1
+                                ? "día"
+                                : "días"}{" "}
+                              restantes
+                            </strong>
+                          </div>
+
+                          <div className="alcancia-plan-grid">
+
+                            <div className="alcancia-plan-item">
+                              <span>
+                                Diario
+                              </span>
+
+                              <strong>
+                                {formatearMoneda(
+                                  planAhorro.ahorroDiario
+                                )}
+                              </strong>
+                            </div>
+
+                            <div className="alcancia-plan-item">
+                              <span>
+                                Semanal
+                              </span>
+
+                              <strong>
+                                {formatearMoneda(
+                                  planAhorro.ahorroSemanal
+                                )}
+                              </strong>
+                            </div>
+
+                            <div className="alcancia-plan-item">
+                              <span>
+                                Quincenal
+                              </span>
+
+                              <strong>
+                                {formatearMoneda(
+                                  planAhorro.ahorroQuincenal
+                                )}
+                              </strong>
+                            </div>
+
+                          </div>
+
+                          <p>
+                            Te faltan{" "}
+                            <strong>
+                              {formatearMoneda(
+                                planAhorro.faltante
+                              )}
+                            </strong>{" "}
+                            para completar tu objetivo.
+                          </p>
+
+                        </div>
+                      )}
+
                     </>
                   )}
 
@@ -887,7 +1091,10 @@ function Alcancias({ sesion, onVolver }) {
 
                       <strong>
                         {formatearMoneda(
-                          Math.max(0, saldo)
+                          Math.max(
+                            0,
+                            saldo
+                          )
                         )}
                       </strong>
                     </div>
@@ -1093,6 +1300,7 @@ function Alcancias({ sesion, onVolver }) {
                 <input
                   id="alcancia-fecha"
                   type="date"
+                  min={obtenerFechaLocal()}
                   value={
                     formulario.fecha_objetivo
                   }
