@@ -7,6 +7,7 @@ function Auth() {
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
+  const [mostrarPassword, setMostrarPassword] = useState(false);
   const [cargando, setCargando] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
@@ -26,6 +27,7 @@ function Auth() {
     setNombre("");
     setCorreo("");
     setPassword("");
+    setMostrarPassword(false);
   };
 
   const manejarSubmit = async (e) => {
@@ -188,20 +190,42 @@ function Auth() {
               Contraseña
             </label>
 
-            <input
-              id="password"
-              type="password"
-              placeholder="Mínimo 6 caracteres"
-              value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
-              autoComplete={
-                modo === "login"
-                  ? "current-password"
-                  : "new-password"
-              }
-            />
+            <div className="password-wrapper">
+              <input
+                id="password"
+                type={mostrarPassword ? "text" : "password"}
+                placeholder="Mínimo 6 caracteres"
+                value={password}
+                onChange={(e) =>
+                  setPassword(e.target.value)
+                }
+                autoComplete={
+                  modo === "login"
+                    ? "current-password"
+                    : "new-password"
+                }
+              />
+
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() =>
+                  setMostrarPassword((actual) => !actual)
+                }
+                aria-label={
+                  mostrarPassword
+                    ? "Ocultar contraseña"
+                    : "Mostrar contraseña"
+                }
+                title={
+                  mostrarPassword
+                    ? "Ocultar contraseña"
+                    : "Mostrar contraseña"
+                }
+              >
+                {mostrarPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
           </div>
 
           {error && (

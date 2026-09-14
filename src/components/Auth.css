@@ -43,6 +43,7 @@
 .auth-logo-icon {
   width: 52px;
   height: 52px;
+  flex-shrink: 0;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -115,7 +116,10 @@
   background: #0b1b2e;
   color: #ffffff;
   font-size: 14px;
-  transition: all 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .auth-field input::placeholder {
@@ -126,6 +130,50 @@
   border-color: #3b82f6;
   background: #0d2036;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+/* Campo de contraseña con botón mostrar/ocultar */
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  padding-right: 52px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 38px;
+  height: 38px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: #8ea1b8;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.password-toggle:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
 }
 
 .auth-submit {
@@ -247,5 +295,29 @@
 
   .auth-header h2 {
     font-size: 25px;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-page {
+    padding: 12px;
+  }
+
+  .auth-card {
+    padding: 24px 18px;
+  }
+
+  .auth-logo-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+  }
+
+  .auth-logo h1 {
+    font-size: 22px;
+  }
+
+  .auth-header h2 {
+    font-size: 23px;
   }
 }
