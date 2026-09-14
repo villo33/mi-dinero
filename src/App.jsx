@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { supabase } from "./services/supabase";
 import Auth from "./components/Auth";
 import "./App.css";
+
 import Dashboard from "./components/Dashboard";
 import Movimientos from "./components/Movimientos";
 import Deudas from "./components/Deudas";
 import Metas from "./components/Metas";
+import Alcancias from "./components/Alcancias";
 
 function App() {
   const [sesion, setSesion] = useState(null);
@@ -101,6 +103,15 @@ function App() {
     );
   }
 
+  if (pantalla === "alcancias") {
+    return (
+      <Alcancias
+        sesion={sesion}
+        onVolver={() => setPantalla("dashboard")}
+      />
+    );
+  }
+
   return (
     <Dashboard
       sesion={sesion}
@@ -116,6 +127,9 @@ function App() {
       }
       onAgregarMeta={() =>
         setPantalla("metas")
+      }
+      onAgregarAlcancia={() =>
+        setPantalla("alcancias")
       }
     />
   );
