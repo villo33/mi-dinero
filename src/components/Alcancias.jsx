@@ -122,7 +122,10 @@ function Alcancias({ sesion, onVolver }) {
       return null;
     }
 
-    const hoy = new Date(`${obtenerFechaLocal()}T00:00:00`);
+    const hoy = new Date(
+      `${obtenerFechaLocal()}T00:00:00`
+    );
+
     const fechaMeta = new Date(
       `${fechaObjetivo}T00:00:00`
     );
@@ -134,30 +137,55 @@ function Alcancias({ sesion, onVolver }) {
       diferencia / (1000 * 60 * 60 * 24)
     );
 
-    const faltante = Math.max(0, objetivo - saldo);
+    const faltante = Math.max(
+      0,
+      objetivo - saldo
+    );
 
-    if (diasRestantes <= 0 || faltante <= 0) {
+    if (
+      diasRestantes <= 0 ||
+      faltante <= 0
+    ) {
       return null;
     }
+
+    /*
+      PLAN DE AHORRO
+
+      Diario:
+      Divide lo que falta entre todos los días disponibles.
+
+      Semanal:
+      Divide lo que falta entre la cantidad de semanas
+      disponibles. Se redondea hacia arriba para que el
+      último período no quede incompleto.
+
+      Quincenal:
+      Divide lo que falta entre la cantidad de quincenas
+      disponibles. También se redondea hacia arriba.
+
+      De esta manera los valores nunca se disparan por
+      multiplicar el ahorro diario por 7 o 15.
+    */
 
     const ahorroDiario =
       faltante / diasRestantes;
 
-    const semanasRestantes =
-      diasRestantes / 7;
+    const semanasRestantes = Math.max(
+      1,
+      Math.ceil(diasRestantes / 7)
+    );
 
-    const quincenasRestantes =
-      diasRestantes / 15;
+    const quincenasRestantes = Math.max(
+      1,
+      Math.ceil(diasRestantes / 15)
+    );
 
     const ahorroSemanal =
-      semanasRestantes > 0
-        ? faltante / semanasRestantes
-        : faltante;
+      faltante / semanasRestantes;
 
     const ahorroQuincenal =
-      quincenasRestantes > 0
-        ? faltante / quincenasRestantes
-        : faltante;
+      faltante / quincenasRestantes;
 
     return {
       faltante,
@@ -192,6 +220,7 @@ function Alcancias({ sesion, onVolver }) {
       setError(
         "No fue posible cargar tus alcancías."
       );
+
       setAlcancias([]);
     } else {
       setAlcancias(data || []);
@@ -260,10 +289,12 @@ function Alcancias({ sesion, onVolver }) {
 
     setFormulario({
       nombre: alcancia.nombre || "",
-      fecha_objetivo: alcancia.fecha_objetivo || "",
+      fecha_objetivo:
+        alcancia.fecha_objetivo || "",
       monto_objetivo:
         alcancia.monto_objetivo ?? "",
-      descripcion: alcancia.descripcion || "",
+      descripcion:
+        alcancia.descripcion || "",
     });
 
     setMensaje("");
@@ -279,7 +310,10 @@ function Alcancias({ sesion, onVolver }) {
     setFormulario(formularioInicial);
   };
 
-  const cambiarFormulario = (campo, valor) => {
+  const cambiarFormulario = (
+    campo,
+    valor
+  ) => {
     setFormulario((anterior) => ({
       ...anterior,
       [campo]: valor,
@@ -294,12 +328,15 @@ function Alcancias({ sesion, onVolver }) {
     setMensaje("");
     setError("");
 
-    const nombre = formulario.nombre.trim();
+    const nombre =
+      formulario.nombre.trim();
 
     const montoObjetivo =
       formulario.monto_objetivo === ""
         ? null
-        : Number(formulario.monto_objetivo);
+        : Number(
+            formulario.monto_objetivo
+          );
 
     if (!nombre) {
       setError(
@@ -317,7 +354,9 @@ function Alcancias({ sesion, onVolver }) {
 
     const hoy = obtenerFechaLocal();
 
-    if (formulario.fecha_objetivo < hoy) {
+    if (
+      formulario.fecha_objetivo < hoy
+    ) {
       setError(
         "La fecha objetivo no puede ser anterior a hoy."
       );
@@ -344,7 +383,8 @@ function Alcancias({ sesion, onVolver }) {
         formulario.fecha_objetivo,
       monto_objetivo: montoObjetivo,
       descripcion:
-        formulario.descripcion.trim() || null,
+        formulario.descripcion.trim() ||
+        null,
     };
 
     if (alcanciaEditando) {
@@ -438,13 +478,14 @@ function Alcancias({ sesion, onVolver }) {
     setGuardando(false);
   };
 
-  const obtenerMovimientosSiEsNecesario = async (
-    alcanciaId
-  ) => {
-    if (!movimientos[alcanciaId]) {
-      await cargarMovimientos(alcanciaId);
-    }
-  };
+  const obtenerMovimientosSiEsNecesario =
+    async (alcanciaId) => {
+      if (!movimientos[alcanciaId]) {
+        await cargarMovimientos(
+          alcanciaId
+        );
+      }
+    };
 
   const abrirMovimiento = async (
     alcancia,
@@ -457,7 +498,10 @@ function Alcancias({ sesion, onVolver }) {
       alcancia.id
     );
 
-    setAlcanciaParaMovimiento(alcancia);
+    setAlcanciaParaMovimiento(
+      alcancia
+    );
+
     setTipoMovimiento(tipo);
     setMontoMovimiento("");
     setFechaMovimiento(
@@ -477,7 +521,9 @@ function Alcancias({ sesion, onVolver }) {
     setDescripcionMovimiento("");
   };
 
-  const guardarMovimiento = async (event) => {
+  const guardarMovimiento = async (
+    event
+  ) => {
     event.preventDefault();
 
     if (
@@ -490,9 +536,13 @@ function Alcancias({ sesion, onVolver }) {
     setMensaje("");
     setError("");
 
-    const monto = Number(montoMovimiento);
+    const monto =
+      Number(montoMovimiento);
 
-    if (!Number.isFinite(monto) || monto <= 0) {
+    if (
+      !Number.isFinite(monto) ||
+      monto <= 0
+    ) {
       setError(
         "El monto debe ser mayor que cero."
       );
@@ -506,9 +556,10 @@ function Alcancias({ sesion, onVolver }) {
       return;
     }
 
-    const saldoActual = calcularSaldo(
-      alcanciaParaMovimiento.id
-    );
+    const saldoActual =
+      calcularSaldo(
+        alcanciaParaMovimiento.id
+      );
 
     if (
       tipoMovimiento === "retiro" &&
@@ -565,8 +616,11 @@ function Alcancias({ sesion, onVolver }) {
         ] || []),
         data,
       ].sort((a, b) => {
-        const fechaA = a.fecha || "";
-        const fechaB = b.fecha || "";
+        const fechaA =
+          a.fecha || "";
+
+        const fechaB =
+          b.fecha || "";
 
         if (fechaA !== fechaB) {
           return fechaB.localeCompare(
@@ -597,9 +651,10 @@ function Alcancias({ sesion, onVolver }) {
   ) => {
     if (!usuarioId) return;
 
-    const confirmar = window.confirm(
-      `¿Quieres eliminar la alcancía "${alcancia.nombre}"?`
-    );
+    const confirmar =
+      window.confirm(
+        `¿Quieres eliminar la alcancía "${alcancia.nombre}"?`
+      );
 
     if (!confirmar) return;
 
@@ -629,13 +684,18 @@ function Alcancias({ sesion, onVolver }) {
 
     setAlcancias((anteriores) =>
       anteriores.filter(
-        (item) => item.id !== alcancia.id
+        (item) =>
+          item.id !== alcancia.id
       )
     );
 
     setMovimientos((anteriores) => {
-      const copia = { ...anteriores };
+      const copia = {
+        ...anteriores,
+      };
+
       delete copia[alcancia.id];
+
       return copia;
     });
 
@@ -644,35 +704,43 @@ function Alcancias({ sesion, onVolver }) {
     );
   };
 
-  const alternarMovimientos = async (
-    alcanciaId
-  ) => {
-    const estaAbierta =
-      alcanciasAbiertas[alcanciaId];
+  const alternarMovimientos =
+    async (alcanciaId) => {
+      const estaAbierta =
+        alcanciasAbiertas[
+          alcanciaId
+        ];
 
-    setAlcanciasAbiertas((anteriores) => ({
-      ...anteriores,
-      [alcanciaId]: !estaAbierta,
-    }));
+      setAlcanciasAbiertas(
+        (anteriores) => ({
+          ...anteriores,
+          [alcanciaId]:
+            !estaAbierta,
+        })
+      );
 
-    if (
-      !estaAbierta &&
-      !movimientos[alcanciaId]
-    ) {
-      await cargarMovimientos(alcanciaId);
-    }
-  };
+      if (
+        !estaAbierta &&
+        !movimientos[alcanciaId]
+      ) {
+        await cargarMovimientos(
+          alcanciaId
+        );
+      }
+    };
 
   const resumen = useMemo(() => {
     let totalAhorrado = 0;
     let totalObjetivos = 0;
+
     const totalAlcancias =
       alcancias.length;
 
     alcancias.forEach((alcancia) => {
-      const saldo = calcularSaldo(
-        alcancia.id
-      );
+      const saldo =
+        calcularSaldo(
+          alcancia.id
+        );
 
       totalAhorrado += saldo;
 
@@ -686,7 +754,8 @@ function Alcancias({ sesion, onVolver }) {
     const alcanciasConObjetivo =
       alcancias.filter(
         (alcancia) =>
-          alcancia.monto_objetivo !== null &&
+          alcancia.monto_objetivo !==
+            null &&
           alcancia.monto_objetivo !== ""
       ).length;
 
@@ -696,7 +765,10 @@ function Alcancias({ sesion, onVolver }) {
       totalAlcancias,
       alcanciasConObjetivo,
     };
-  }, [alcancias, movimientos]);
+  }, [
+    alcancias,
+    movimientos,
+  ]);
 
   if (cargando) {
     return (
@@ -718,6 +790,7 @@ function Alcancias({ sesion, onVolver }) {
 
         <header className="alcancias-header">
           <div>
+
             <button
               type="button"
               className="alcancias-back-button"
@@ -726,21 +799,27 @@ function Alcancias({ sesion, onVolver }) {
               ← Volver
             </button>
 
-            <h1>Mis alcancías</h1>
+            <h1>
+              Mis alcancías
+            </h1>
 
             <p>
               Guarda dinero poco a poco y
               aporta cuando tengas disponible.
             </p>
+
           </div>
 
           <button
             type="button"
             className="alcancias-primary-button"
-            onClick={abrirNuevaAlcancia}
+            onClick={
+              abrirNuevaAlcancia
+            }
           >
             + Nueva alcancía
           </button>
+
         </header>
 
         {mensaje && (
@@ -758,7 +837,9 @@ function Alcancias({ sesion, onVolver }) {
         <section className="alcancias-resumen">
 
           <div className="alcancia-resumen-card">
-            <span>Total ahorrado</span>
+            <span>
+              Total ahorrado
+            </span>
 
             <strong>
               {formatearMoneda(
@@ -768,7 +849,9 @@ function Alcancias({ sesion, onVolver }) {
           </div>
 
           <div className="alcancia-resumen-card">
-            <span>Alcancías</span>
+            <span>
+              Alcancías
+            </span>
 
             <strong>
               {resumen.totalAlcancias}
@@ -776,15 +859,21 @@ function Alcancias({ sesion, onVolver }) {
           </div>
 
           <div className="alcancia-resumen-card">
-            <span>Objetivos definidos</span>
+            <span>
+              Objetivos definidos
+            </span>
 
             <strong>
-              {resumen.alcanciasConObjetivo}
+              {
+                resumen.alcanciasConObjetivo
+              }
             </strong>
           </div>
 
           <div className="alcancia-resumen-card">
-            <span>Objetivo total</span>
+            <span>
+              Objetivo total
+            </span>
 
             <strong>
               {formatearMoneda(
@@ -802,18 +891,22 @@ function Alcancias({ sesion, onVolver }) {
               🐷
             </div>
 
-            <h2>Aún no tienes alcancías</h2>
+            <h2>
+              Aún no tienes alcancías
+            </h2>
 
             <p>
-              Crea una alcancía y empieza a
-              guardar dinero cuando tengas
+              Crea una alcancía y empieza
+              a guardar dinero cuando tengas
               disponible.
             </p>
 
             <button
               type="button"
               className="alcancias-primary-button"
-              onClick={abrirNuevaAlcancia}
+              onClick={
+                abrirNuevaAlcancia
+              }
             >
               Crear mi primera alcancía
             </button>
@@ -822,406 +915,430 @@ function Alcancias({ sesion, onVolver }) {
         ) : (
           <section className="alcancias-grid">
 
-            {alcancias.map((alcancia) => {
-              const saldo =
-                calcularSaldo(
-                  alcancia.id
-                );
+            {alcancias.map(
+              (alcancia) => {
+                const saldo =
+                  calcularSaldo(
+                    alcancia.id
+                  );
 
-              const objetivo =
-                alcancia.monto_objetivo
-                  ? Number(
-                      alcancia.monto_objetivo
-                    )
-                  : null;
-
-              const porcentaje =
-                objetivo
-                  ? Math.min(
-                      100,
-                      Math.max(
-                        0,
-                        (saldo / objetivo) *
-                          100
+                const objetivo =
+                  alcancia.monto_objetivo
+                    ? Number(
+                        alcancia.monto_objetivo
                       )
-                    )
-                  : null;
+                    : null;
 
-              const planAhorro =
-                calcularPlanAhorro(
-                  saldo,
-                  objetivo,
-                  alcancia.fecha_objetivo
-                );
+                const porcentaje =
+                  objetivo
+                    ? Math.min(
+                        100,
+                        Math.max(
+                          0,
+                          (saldo /
+                            objetivo) *
+                            100
+                        )
+                      )
+                    : null;
 
-              const estadoFecha =
-                obtenerEstadoFecha(
-                  alcancia.fecha_objetivo
-                );
+                const planAhorro =
+                  calcularPlanAhorro(
+                    saldo,
+                    objetivo,
+                    alcancia.fecha_objetivo
+                  );
 
-              const movimientosAbiertos =
-                alcanciasAbiertas[
-                  alcancia.id
-                ];
+                const estadoFecha =
+                  obtenerEstadoFecha(
+                    alcancia.fecha_objetivo
+                  );
 
-              return (
-                <article
-                  className="alcancia-card"
-                  key={alcancia.id}
-                >
+                const movimientosAbiertos =
+                  alcanciasAbiertas[
+                    alcancia.id
+                  ];
 
-                  <div className="alcancia-card-top">
+                return (
+                  <article
+                    className="alcancia-card"
+                    key={alcancia.id}
+                  >
 
-                    <div>
+                    <div className="alcancia-card-top">
 
-                      <span
-                        className={`alcancia-status ${estadoFecha}`}
-                      >
-                        {estadoFecha ===
-                        "vencida"
-                          ? "Fecha cumplida"
-                          : estadoFecha ===
-                            "hoy"
-                          ? "Es hoy"
-                          : "Activa"}
-                      </span>
+                      <div>
 
-                      <h2>
-                        🐷 {alcancia.nombre}
-                      </h2>
-
-                    </div>
-
-                    <div className="alcancia-card-actions">
-
-                      <button
-                        type="button"
-                        className="alcancia-icon-button"
-                        onClick={() =>
-                          abrirEditarAlcancia(
-                            alcancia
-                          )
-                        }
-                        title="Editar alcancía"
-                      >
-                        ✏️
-                      </button>
-
-                      <button
-                        type="button"
-                        className="alcancia-icon-button danger"
-                        onClick={() =>
-                          eliminarAlcancia(
-                            alcancia
-                          )
-                        }
-                        title="Eliminar alcancía"
-                      >
-                        🗑️
-                      </button>
-
-                    </div>
-
-                  </div>
-
-                  {alcancia.descripcion && (
-                    <p className="alcancia-description">
-                      {alcancia.descripcion}
-                    </p>
-                  )}
-
-                  <div className="alcancia-values">
-
-                    <div>
-                      <span>Ahorrado</span>
-
-                      <strong>
-                        {formatearMoneda(
-                          saldo
-                        )}
-                      </strong>
-                    </div>
-
-                    <div>
-                      <span>
-                        {objetivo
-                          ? "Objetivo"
-                          : "Ahorro libre"}
-                      </span>
-
-                      <strong>
-                        {objetivo
-                          ? formatearMoneda(
-                              objetivo
-                            )
-                          : "Sin límite"}
-                      </strong>
-                    </div>
-
-                  </div>
-
-                  {objetivo !== null && (
-                    <>
-                      <div className="alcancia-progress-large">
-
-                        <div
-                          className="alcancia-progress-fill"
-                          style={{
-                            width: `${porcentaje}%`,
-                          }}
-                        ></div>
-
-                      </div>
-
-                      <div className="alcancia-progress-info">
-
-                        <strong>
-                          {porcentaje.toFixed(0)}%
-                        </strong>
-
-                        <span>
-                          {saldo >= objetivo
-                            ? "Objetivo alcanzado"
-                            : `Faltan ${formatearMoneda(
-                                objetivo -
-                                  saldo
-                              )}`}
+                        <span
+                          className={`alcancia-status ${estadoFecha}`}
+                        >
+                          {estadoFecha ===
+                          "vencida"
+                            ? "Fecha cumplida"
+                            : estadoFecha ===
+                              "hoy"
+                            ? "Es hoy"
+                            : "Activa"}
                         </span>
 
+                        <h2>
+                          🐷{" "}
+                          {alcancia.nombre}
+                        </h2>
+
                       </div>
 
-                      {planAhorro && (
-                        <div className="alcancia-plan-ahorro">
+                      <div className="alcancia-card-actions">
 
-                          <div className="alcancia-plan-header">
-                            <div>
-                              <span>
-                                PLAN DE AHORRO
-                              </span>
+                        <button
+                          type="button"
+                          className="alcancia-icon-button"
+                          onClick={() =>
+                            abrirEditarAlcancia(
+                              alcancia
+                            )
+                          }
+                          title="Editar alcancía"
+                        >
+                          ✏️
+                        </button>
 
-                              <h3>
-                                Para alcanzar tu objetivo
-                              </h3>
-                            </div>
+                        <button
+                          type="button"
+                          className="alcancia-icon-button danger"
+                          onClick={() =>
+                            eliminarAlcancia(
+                              alcancia
+                            )
+                          }
+                          title="Eliminar alcancía"
+                        >
+                          🗑️
+                        </button>
 
-                            <strong>
-                              {planAhorro.diasRestantes}{" "}
-                              {planAhorro.diasRestantes ===
-                              1
-                                ? "día"
-                                : "días"}{" "}
-                              restantes
-                            </strong>
-                          </div>
+                      </div>
 
-                          <div className="alcancia-plan-grid">
+                    </div>
 
-                            <div className="alcancia-plan-item">
-                              <span>
-                                Diario
-                              </span>
+                    {alcancia.descripcion && (
+                      <p className="alcancia-description">
+                        {
+                          alcancia.descripcion
+                        }
+                      </p>
+                    )}
 
-                              <strong>
-                                {formatearMoneda(
-                                  planAhorro.ahorroDiario
-                                )}
-                              </strong>
-                            </div>
+                    <div className="alcancia-values">
 
-                            <div className="alcancia-plan-item">
-                              <span>
-                                Semanal
-                              </span>
+                      <div>
+                        <span>
+                          Ahorrado
+                        </span>
 
-                              <strong>
-                                {formatearMoneda(
-                                  planAhorro.ahorroSemanal
-                                )}
-                              </strong>
-                            </div>
+                        <strong>
+                          {formatearMoneda(
+                            saldo
+                          )}
+                        </strong>
+                      </div>
 
-                            <div className="alcancia-plan-item">
-                              <span>
-                                Quincenal
-                              </span>
+                      <div>
+                        <span>
+                          {objetivo
+                            ? "Objetivo"
+                            : "Ahorro libre"}
+                        </span>
 
-                              <strong>
-                                {formatearMoneda(
-                                  planAhorro.ahorroQuincenal
-                                )}
-                              </strong>
-                            </div>
+                        <strong>
+                          {objetivo
+                            ? formatearMoneda(
+                                objetivo
+                              )
+                            : "Sin límite"}
+                        </strong>
+                      </div>
 
-                          </div>
+                    </div>
 
-                          <p>
-                            Te faltan{" "}
-                            <strong>
-                              {formatearMoneda(
-                                planAhorro.faltante
-                              )}
-                            </strong>{" "}
-                            para completar tu objetivo.
-                          </p>
+                    {objetivo !== null && (
+                      <>
+                        <div className="alcancia-progress-large">
+
+                          <div
+                            className="alcancia-progress-fill"
+                            style={{
+                              width: `${porcentaje}%`,
+                            }}
+                          ></div>
 
                         </div>
+
+                        <div className="alcancia-progress-info">
+
+                          <strong>
+                            {porcentaje.toFixed(
+                              0
+                            )}
+                            %
+                          </strong>
+
+                          <span>
+                            {saldo >=
+                            objetivo
+                              ? "Objetivo alcanzado"
+                              : `Faltan ${formatearMoneda(
+                                  objetivo -
+                                    saldo
+                                )}`}
+                          </span>
+
+                        </div>
+
+                        {planAhorro && (
+                          <div className="alcancia-plan-ahorro">
+
+                            <div className="alcancia-plan-header">
+
+                              <div>
+                                <span>
+                                  PLAN DE AHORRO
+                                </span>
+
+                                <h3>
+                                  Para alcanzar tu objetivo
+                                </h3>
+                              </div>
+
+                              <strong>
+                                {
+                                  planAhorro.diasRestantes
+                                }{" "}
+                                {
+                                  planAhorro.diasRestantes ===
+                                  1
+                                    ? "día"
+                                    : "días"
+                                }{" "}
+                                restantes
+                              </strong>
+
+                            </div>
+
+                            <div className="alcancia-plan-grid">
+
+                              <div className="alcancia-plan-item">
+
+                                <span>
+                                  Diario
+                                </span>
+
+                                <strong>
+                                  {formatearMoneda(
+                                    planAhorro.ahorroDiario
+                                  )}
+                                </strong>
+
+                              </div>
+
+                              <div className="alcancia-plan-item">
+
+                                <span>
+                                  Semanal
+                                </span>
+
+                                <strong>
+                                  {formatearMoneda(
+                                    planAhorro.ahorroSemanal
+                                  )}
+                                </strong>
+
+                              </div>
+
+                              <div className="alcancia-plan-item">
+
+                                <span>
+                                  Quincenal
+                                </span>
+
+                                <strong>
+                                  {formatearMoneda(
+                                    planAhorro.ahorroQuincenal
+                                  )}
+                                </strong>
+
+                              </div>
+
+                            </div>
+
+                            <p>
+                              Te faltan{" "}
+                              <strong>
+                                {formatearMoneda(
+                                  planAhorro.faltante
+                                )}
+                              </strong>{" "}
+                              para completar tu objetivo.
+                            </p>
+
+                          </div>
+                        )}
+
+                      </>
+                    )}
+
+                    <div className="alcancia-details">
+
+                      <div>
+                        <span>
+                          Fecha objetivo
+                        </span>
+
+                        <strong>
+                          {formatearFecha(
+                            alcancia.fecha_objetivo
+                          )}
+                        </strong>
+                      </div>
+
+                      <div>
+                        <span>
+                          Ahorrado disponible
+                        </span>
+
+                        <strong>
+                          {formatearMoneda(
+                            Math.max(
+                              0,
+                              saldo
+                            )
+                          )}
+                        </strong>
+                      </div>
+
+                    </div>
+
+                    <div className="alcancia-card-buttons">
+
+                      <button
+                        type="button"
+                        className="alcancias-primary-button"
+                        onClick={() =>
+                          abrirMovimiento(
+                            alcancia,
+                            "aporte"
+                          )
+                        }
+                      >
+                        + Aportar dinero
+                      </button>
+
+                      {saldo > 0 && (
+                        <button
+                          type="button"
+                          className="alcancias-secondary-button"
+                          onClick={() =>
+                            abrirMovimiento(
+                              alcancia,
+                              "retiro"
+                            )
+                          }
+                        >
+                          Retirar dinero
+                        </button>
                       )}
 
-                    </>
-                  )}
-
-                  <div className="alcancia-details">
-
-                    <div>
-                      <span>
-                        Fecha objetivo
-                      </span>
-
-                      <strong>
-                        {formatearFecha(
-                          alcancia.fecha_objetivo
-                        )}
-                      </strong>
-                    </div>
-
-                    <div>
-                      <span>
-                        Ahorrado disponible
-                      </span>
-
-                      <strong>
-                        {formatearMoneda(
-                          Math.max(
-                            0,
-                            saldo
-                          )
-                        )}
-                      </strong>
-                    </div>
-
-                  </div>
-
-                  <div className="alcancia-card-buttons">
-
-                    <button
-                      type="button"
-                      className="alcancias-primary-button"
-                      onClick={() =>
-                        abrirMovimiento(
-                          alcancia,
-                          "aporte"
-                        )
-                      }
-                    >
-                      + Aportar dinero
-                    </button>
-
-                    {saldo > 0 && (
                       <button
                         type="button"
                         className="alcancias-secondary-button"
                         onClick={() =>
-                          abrirMovimiento(
-                            alcancia,
-                            "retiro"
+                          alternarMovimientos(
+                            alcancia.id
                           )
                         }
                       >
-                        Retirar dinero
+                        {movimientosAbiertos
+                          ? "Ocultar historial"
+                          : "Ver historial"}
                       </button>
-                    )}
-
-                    <button
-                      type="button"
-                      className="alcancias-secondary-button"
-                      onClick={() =>
-                        alternarMovimientos(
-                          alcancia.id
-                        )
-                      }
-                    >
-                      {movimientosAbiertos
-                        ? "Ocultar historial"
-                        : "Ver historial"}
-                    </button>
-
-                  </div>
-
-                  {movimientosAbiertos && (
-                    <div className="alcancia-historial">
-
-                      <h3>
-                        Historial de movimientos
-                      </h3>
-
-                      {cargandoMovimientos[
-                        alcancia.id
-                      ] ? (
-                        <p>
-                          Cargando historial...
-                        </p>
-                      ) : !movimientos[
-                          alcancia.id
-                        ]?.length ? (
-                        <p>
-                          Todavía no hay movimientos
-                          registrados.
-                        </p>
-                      ) : (
-                        <div className="alcancia-historial-lista">
-
-                          {movimientos[
-                            alcancia.id
-                          ].map(
-                            (movimiento) => (
-                              <div
-                                className={`alcancia-movimiento-item ${movimiento.tipo}`}
-                                key={
-                                  movimiento.id
-                                }
-                              >
-
-                                <div>
-
-                                  <strong>
-                                    {movimiento.tipo ===
-                                    "aporte"
-                                      ? "+"
-                                      : "-"}
-                                    {formatearMoneda(
-                                      movimiento.monto
-                                    )}
-                                  </strong>
-
-                                  <span>
-                                    {formatearFecha(
-                                      movimiento.fecha
-                                    )}
-                                  </span>
-
-                                </div>
-
-                                {movimiento.descripcion && (
-                                  <p>
-                                    {
-                                      movimiento.descripcion
-                                    }
-                                  </p>
-                                )}
-
-                              </div>
-                            )
-                          )}
-
-                        </div>
-                      )}
 
                     </div>
-                  )}
 
-                </article>
-              );
-            })}
+                    {movimientosAbiertos && (
+                      <div className="alcancia-historial">
+
+                        <h3>
+                          Historial de movimientos
+                        </h3>
+
+                        {cargandoMovimientos[
+                          alcancia.id
+                        ] ? (
+                          <p>
+                            Cargando historial...
+                          </p>
+                        ) : !movimientos[
+                            alcancia.id
+                          ]?.length ? (
+                          <p>
+                            Todavía no hay movimientos
+                            registrados.
+                          </p>
+                        ) : (
+                          <div className="alcancia-historial-lista">
+
+                            {movimientos[
+                              alcancia.id
+                            ].map(
+                              (movimiento) => (
+                                <div
+                                  className={`alcancia-movimiento-item ${movimiento.tipo}`}
+                                  key={
+                                    movimiento.id
+                                  }
+                                >
+
+                                  <div>
+
+                                    <strong>
+                                      {movimiento.tipo ===
+                                      "aporte"
+                                        ? "+"
+                                        : "-"}
+                                      {formatearMoneda(
+                                        movimiento.monto
+                                      )}
+                                    </strong>
+
+                                    <span>
+                                      {formatearFecha(
+                                        movimiento.fecha
+                                      )}
+                                    </span>
+
+                                  </div>
+
+                                  {movimiento.descripcion && (
+                                    <p>
+                                      {
+                                        movimiento.descripcion
+                                      }
+                                    </p>
+                                  )}
+
+                                </div>
+                              )
+                            )}
+
+                          </div>
+                        )}
+
+                      </div>
+                    )}
+
+                  </article>
+                );
+              }
+            )}
 
           </section>
         )}
@@ -1247,7 +1364,9 @@ function Alcancias({ sesion, onVolver }) {
             <div className="alcancias-modal-header">
 
               <div>
-                <span>MI DINERO</span>
+                <span>
+                  MI DINERO
+                </span>
 
                 <h2>
                   {alcanciaEditando
@@ -1258,7 +1377,9 @@ function Alcancias({ sesion, onVolver }) {
 
               <button
                 type="button"
-                onClick={cerrarFormulario}
+                onClick={
+                  cerrarFormulario
+                }
                 disabled={guardando}
               >
                 ×
@@ -1266,7 +1387,11 @@ function Alcancias({ sesion, onVolver }) {
 
             </div>
 
-            <form onSubmit={guardarAlcancia}>
+            <form
+              onSubmit={
+                guardarAlcancia
+              }
+            >
 
               <div className="alcancias-form-group">
 
@@ -1277,7 +1402,9 @@ function Alcancias({ sesion, onVolver }) {
                 <input
                   id="alcancia-nombre"
                   type="text"
-                  value={formulario.nombre}
+                  value={
+                    formulario.nombre
+                  }
                   onChange={(event) =>
                     cambiarFormulario(
                       "nombre",
@@ -1379,7 +1506,9 @@ function Alcancias({ sesion, onVolver }) {
                 <button
                   type="button"
                   className="alcancias-secondary-button"
-                  onClick={cerrarFormulario}
+                  onClick={
+                    cerrarFormulario
+                  }
                   disabled={guardando}
                 >
                   Cancelar
@@ -1425,7 +1554,9 @@ function Alcancias({ sesion, onVolver }) {
             <div className="alcancias-modal-header">
 
               <div>
-                <span>AHORRO</span>
+                <span>
+                  AHORRO
+                </span>
 
                 <h2>
                   {tipoMovimiento ===
@@ -1435,13 +1566,17 @@ function Alcancias({ sesion, onVolver }) {
                 </h2>
 
                 <p>
-                  {alcanciaParaMovimiento.nombre}
+                  {
+                    alcanciaParaMovimiento.nombre
+                  }
                 </p>
               </div>
 
               <button
                 type="button"
-                onClick={cerrarMovimiento}
+                onClick={
+                  cerrarMovimiento
+                }
                 disabled={
                   guardandoMovimiento
                 }
@@ -1484,7 +1619,9 @@ function Alcancias({ sesion, onVolver }) {
             </div>
 
             <form
-              onSubmit={guardarMovimiento}
+              onSubmit={
+                guardarMovimiento
+              }
             >
 
               <div className="alcancias-form-group">
