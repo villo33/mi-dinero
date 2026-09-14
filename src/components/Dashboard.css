@@ -1,0 +1,1396 @@
+/* =========================================================
+   PASO 1 — CONFIGURACIÓN GENERAL DEL DASHBOARD
+   ========================================================= */
+
+.dashboard-page {
+  min-height: 100vh;
+  width: 100%;
+  background:
+    radial-gradient(circle at top right, rgba(29, 95, 194, 0.05), transparent 28%),
+    #f5f7fb;
+  color: #172033;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.dashboard-page *,
+.dashboard-page *::before,
+.dashboard-page *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PASO 2 — ENCABEZADO
+   ========================================================= */
+
+.dashboard-header {
+  width: 100%;
+  min-height: 76px;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #e7ebf2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 42px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 2px 16px rgba(15, 23, 42, 0.045);
+  backdrop-filter: blur(12px);
+}
+
+.dashboard-brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.dashboard-brand-icon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #0d2857, #2168ca);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(29, 95, 194, 0.2);
+}
+
+.dashboard-brand > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dashboard-brand span {
+  color: #10244a;
+  font-size: 15px;
+  line-height: 1.1;
+  font-weight: 850;
+  letter-spacing: 0.4px;
+}
+
+.dashboard-brand strong {
+  color: #8994a5;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.dashboard-user {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dashboard-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.dashboard-user-info strong {
+  font-size: 14px;
+  color: #1d2939;
+  font-weight: 750;
+}
+
+.dashboard-user-info span {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  color: #8490a3;
+}
+
+.logout-button {
+  border: 1px solid #dfe5ee;
+  background: #ffffff;
+  color: #566275;
+  border-radius: 11px;
+  padding: 10px 15px;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.logout-button:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #172033;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(15, 23, 42, 0.05);
+}
+
+/* =========================================================
+   PASO 3 — CONTENIDO PRINCIPAL
+   ========================================================= */
+
+.dashboard-content {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 34px 0 55px;
+}
+
+/* =========================================================
+   PASO 4 — BIENVENIDA
+   ========================================================= */
+
+.dashboard-welcome {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 24px;
+}
+
+.dashboard-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 9px;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #5276a8;
+}
+
+.dashboard-welcome h1,
+.dashboard-welcome h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 36px);
+  line-height: 1.12;
+  color: #132b55;
+  letter-spacing: -1.1px;
+  font-weight: 850;
+}
+
+.dashboard-welcome p {
+  margin: 8px 0 0;
+  color: #7b8798;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.dashboard-date {
+  flex-shrink: 0;
+  padding: 9px 13px;
+  border: 1px solid #e4e9f1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #718096;
+  font-size: 11px;
+  font-weight: 650;
+  text-transform: capitalize;
+}
+
+/* =========================================================
+   PASO 5 — MENSAJE DE ERROR
+   ========================================================= */
+
+.dashboard-error {
+  margin-bottom: 22px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid #fecaca;
+  background: #fff5f5;
+  color: #b42318;
+  font-size: 13px;
+  font-weight: 650;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-error > span {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  border-radius: 50%;
+  background: #fee4e2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 850;
+}
+
+/* =========================================================
+   PASO 6 — TARJETA PRINCIPAL DE BALANCE
+   ========================================================= */
+
+.dashboard-balance-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(91, 155, 234, 0.2), transparent 25%),
+    linear-gradient(135deg, #0b2450 0%, #123b79 58%, #18559f 100%);
+  border-radius: 22px;
+  padding: 30px 32px;
+  color: #ffffff;
+  margin-bottom: 22px;
+  box-shadow: 0 17px 40px rgba(15, 47, 103, 0.19);
+}
+
+.dashboard-balance-card::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  right: -105px;
+  top: -115px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.dashboard-balance-card::after {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  right: 100px;
+  bottom: -140px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.balance-main {
+  position: relative;
+  z-index: 1;
+}
+
+.balance-main > span {
+  display: block;
+  margin-bottom: 9px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+}
+
+.balance-main strong {
+  display: block;
+  margin: 0;
+  font-size: clamp(36px, 6vw, 50px);
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: -1.8px;
+}
+
+.balance-positive {
+  color: #ffffff;
+}
+
+.balance-negative {
+  color: #ffd6d6;
+}
+
+.balance-main p {
+  margin: 10px 0 0;
+  color: rgba(255, 255, 255, 0.63);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.balance-details {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+  max-width: 700px;
+}
+
+.balance-detail {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  padding: 13px 14px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(5px);
+}
+
+.balance-detail-icon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 850;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.income-icon {
+  color: #7ff0b5;
+}
+
+.expense-icon {
+  color: #ffb4b4;
+}
+
+.balance-detail div:last-child {
+  min-width: 0;
+}
+
+.balance-detail span {
+  display: block;
+  margin-bottom: 3px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.balance-detail strong {
+  display: block;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   PASO 7 — ESTADÍSTICAS
+   ========================================================= */
+
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 24px;
+}
+
+.dashboard-stat-card {
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e7ebf2;
+  border-radius: 17px;
+  padding: 19px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.035);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.dashboard-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: #dce3ed;
+  box-shadow: 0 11px 27px rgba(15, 23, 42, 0.07);
+}
+
+.dashboard-stat-card > div:last-child {
+  min-width: 0;
+}
+
+.stat-icon {
+  width: 37px;
+  height: 37px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.dashboard-stat-card span {
+  display: block;
+  color: #7b8798;
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 650;
+  margin-bottom: 6px;
+}
+
+.dashboard-stat-card strong {
+  display: block;
+  color: #1b2940;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 850;
+  letter-spacing: -0.35px;
+  overflow-wrap: anywhere;
+}
+
+.stat-income {
+  background: #e9f9f0;
+  color: #159957;
+}
+
+.stat-expense {
+  background: #fff0f0;
+  color: #d92d20;
+}
+
+.stat-debt {
+  background: #fff5df;
+  color: #c77a00;
+}
+
+.stat-goal {
+  background: #f0edff;
+  color: #6941c6;
+}
+
+/* =========================================================
+   PASO 8 — GRID PRINCIPAL
+   ========================================================= */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.dashboard-grid:last-of-type {
+  margin-bottom: 0;
+}
+
+.dashboard-panel {
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e7ebf2;
+  border-radius: 19px;
+  padding: 23px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.035);
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 19px;
+}
+
+.panel-header > div {
+  min-width: 0;
+}
+
+.panel-header h2,
+.panel-header h3 {
+  margin: 0;
+  color: #172b4d;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 850;
+  letter-spacing: -0.35px;
+}
+
+.panel-count {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 9px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: #edf3fb;
+  color: #3e68a1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+/* =========================================================
+   PASO 9 — ACCIONES RÁPIDAS
+   ========================================================= */
+
+.quick-actions-panel {
+  min-height: 100%;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.quick-action {
+  position: relative;
+  min-height: 104px;
+  width: 100%;
+  padding: 16px;
+  border-radius: 15px;
+  border: 1px solid #e5e9f0;
+  background: #fafbfd;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.quick-action:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: #ffffff;
+  box-shadow: 0 9px 22px rgba(15, 23, 42, 0.07);
+}
+
+.quick-action:focus-visible {
+  outline: 3px solid rgba(29, 95, 194, 0.15);
+  outline-offset: 2px;
+}
+
+.quick-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.quick-action-icon {
+  width: 37px;
+  height: 37px;
+  flex: 0 0 37px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 850;
+}
+
+.quick-action > span:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding-right: 22px;
+}
+
+.quick-action strong {
+  color: #1e2b40;
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 800;
+}
+
+.quick-action small {
+  color: #7d899a;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.quick-action-arrow {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  color: #98a2b3;
+  font-size: 15px;
+  font-weight: 850;
+}
+
+.income-action {
+  border-color: #d8f0e2;
+}
+
+.income-action .quick-action-icon {
+  background: #e8f8ef;
+  color: #159957;
+}
+
+.income-action:hover:not(:disabled) {
+  border-color: #9fe0bd;
+}
+
+.expense-action {
+  border-color: #f7dcdc;
+}
+
+.expense-action .quick-action-icon {
+  background: #fff0f0;
+  color: #d92d20;
+}
+
+.expense-action:hover:not(:disabled) {
+  border-color: #f0b7b7;
+}
+
+.debt-action {
+  border-color: #f2e4c5;
+}
+
+.debt-action .quick-action-icon {
+  background: #fff5df;
+  color: #c77a00;
+}
+
+.debt-action:hover:not(:disabled) {
+  border-color: #e6c987;
+}
+
+.goal-action {
+  border-color: #e5ddfb;
+}
+
+.goal-action .quick-action-icon {
+  background: #f0edff;
+  color: #6941c6;
+}
+
+.goal-action:hover:not(:disabled) {
+  border-color: #cdbff4;
+  background: #fcfbff;
+}
+
+/* =========================================================
+   PASO 10 — COMPORTAMIENTO DEL MES
+   ========================================================= */
+
+.monthly-panel {
+  min-height: 100%;
+}
+
+.monthly-result {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 135px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  background: #f7f9fc;
+  border: 1px solid #edf0f5;
+  color: #162b50;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.monthly-result > span {
+  display: block;
+  color: #7b8798;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.monthly-result strong {
+  display: block;
+  color: #162b50;
+  font-size: 27px;
+  font-weight: 850;
+  letter-spacing: -0.7px;
+}
+
+.progress-section {
+  margin: 3px 0 21px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+
+.progress-info span {
+  color: #707c8f;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.progress-info strong {
+  color: #293b58;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: #edf0f4;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2d7ce0, #5b9bea);
+  transition: width 0.4s ease;
+}
+
+.expense-progress {
+  background: linear-gradient(90deg, #f04438, #f97066);
+}
+
+.monthly-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.monthly-summary > div {
+  min-width: 0;
+  padding: 13px;
+  border-radius: 12px;
+  background: #fafbfd;
+  border: 1px solid #edf0f4;
+}
+
+.monthly-summary span {
+  display: block;
+  color: #808b9c;
+  font-size: 9px;
+  font-weight: 750;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.monthly-summary strong {
+  display: block;
+  color: #263650;
+  font-size: 12px;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.summary-income {
+  color: #159957 !important;
+}
+
+.summary-expense {
+  color: #d92d20 !important;
+}
+
+/* =========================================================
+   PASO 11 — MOVIMIENTOS RECIENTES
+   ========================================================= */
+
+.dashboard-movements {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.dashboard-movement {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 13px;
+  border: 1px solid #edf0f4;
+  background: #fafbfd;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.dashboard-movement:hover {
+  background: #ffffff;
+  border-color: #e3e8ef;
+  transform: translateX(2px);
+}
+
+.dashboard-movement-icon {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 850;
+  font-size: 16px;
+}
+
+.movement-income {
+  background: #e9f9f0;
+  color: #159957;
+}
+
+.movement-expense {
+  background: #fff0f0;
+  color: #d92d20;
+}
+
+.dashboard-movement-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboard-movement-info strong {
+  display: block;
+  color: #263650;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard-movement-info span {
+  display: block;
+  margin-top: 3px;
+  color: #8994a5;
+  font-size: 10px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard-movement-info small {
+  display: block;
+  margin-top: 3px;
+  color: #a0a9b6;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.movement-amount-income,
+.movement-amount-expense {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.movement-amount-income {
+  color: #159957;
+}
+
+.movement-amount-expense {
+  color: #d92d20;
+}
+
+/* =========================================================
+   PASO 12 — ESTADO VACÍO
+   ========================================================= */
+
+.dashboard-empty {
+  min-height: 185px;
+  border: 1px dashed #dce2eb;
+  border-radius: 14px;
+  background: #fafbfd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 25px 18px;
+}
+
+.dashboard-empty-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #edf3fb;
+  color: #5d7da8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  font-weight: 850;
+  margin-bottom: 12px;
+}
+
+.dashboard-empty strong {
+  color: #344054;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.dashboard-empty p {
+  max-width: 300px;
+  margin: 6px 0 0;
+  color: #8994a5;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.dashboard-empty-action {
+  margin-top: 14px;
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 14px;
+  background: #173e78;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(23, 62, 120, 0.16);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dashboard-empty-action:hover {
+  background: #123362;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(23, 62, 120, 0.22);
+}
+
+/* =========================================================
+   PASO 13 — METAS
+   ========================================================= */
+
+.dashboard-goals {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dashboard-goal {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #e9e4ff;
+  background: #fbfaff;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.dashboard-goal:hover {
+  transform: translateY(-1px);
+  border-color: #ddd4f7;
+  box-shadow: 0 6px 16px rgba(105, 65, 198, 0.06);
+}
+
+.goal-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.goal-top strong {
+  min-width: 0;
+  color: #293957;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.goal-top span {
+  color: #6941c6;
+  font-size: 11px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.goal-progress-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: #eeeafb;
+  overflow: hidden;
+}
+
+.goal-progress-fill {
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #6941c6, #9b7be5);
+  transition: width 0.4s ease;
+}
+
+.goal-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.goal-bottom span {
+  color: #8994a5;
+  font-size: 10px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.goal-bottom span:first-child {
+  color: #6941c6;
+  font-weight: 750;
+}
+
+/* =========================================================
+   PASO 14 — RESUMEN DE AHORRO
+   ========================================================= */
+
+.dashboard-footer-summary {
+  margin-top: 20px;
+  padding: 22px 24px;
+  background: #ffffff;
+  border: 1px solid #e7ebf2;
+  border-radius: 19px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.035);
+}
+
+.dashboard-footer-summary > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 13px;
+}
+
+.dashboard-footer-summary > div:first-child .dashboard-label {
+  margin-bottom: 0;
+}
+
+.dashboard-footer-summary > div:first-child > strong {
+  color: #6941c6;
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.dashboard-footer-summary > p {
+  margin: 11px 0 0;
+  color: #7f8a9b;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.footer-progress {
+  width: 100%;
+}
+
+.footer-progress-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #eeeafb;
+}
+
+.footer-progress-fill {
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #6941c6, #9b7be5);
+  transition: width 0.4s ease;
+}
+
+.footer-progress > span {
+  display: block;
+  margin-top: 8px;
+  color: #8994a5;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+/* =========================================================
+   PASO 15 — CARGANDO
+   ========================================================= */
+
+.dashboard-loading {
+  min-height: 100vh;
+  width: 100%;
+  background: #f5f7fb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: #607087;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.dashboard-spinner {
+  width: 38px;
+  height: 38px;
+  border: 4px solid #dfe7f2;
+  border-top-color: #1d5fc2;
+  border-radius: 50%;
+  animation: dashboardSpin 0.8s linear infinite;
+}
+
+@keyframes dashboardSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   PASO 16 — RESPONSIVE TABLET
+   ========================================================= */
+
+@media (max-width: 980px) {
+  .dashboard-header {
+    padding: 0 24px;
+  }
+
+  .dashboard-content {
+    width: min(100% - 32px, 760px);
+  }
+
+  .dashboard-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .monthly-panel {
+    min-height: auto;
+  }
+}
+
+/* =========================================================
+   PASO 17 — RESPONSIVE MÓVIL
+   ========================================================= */
+
+@media (max-width: 640px) {
+  .dashboard-header {
+    min-height: 68px;
+    padding: 0 15px;
+  }
+
+  .dashboard-brand {
+    gap: 9px;
+  }
+
+  .dashboard-brand-icon {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+    border-radius: 11px;
+    font-size: 19px;
+  }
+
+  .dashboard-brand span {
+    font-size: 13px;
+  }
+
+  .dashboard-brand strong {
+    font-size: 9px;
+  }
+
+  .dashboard-user {
+    gap: 8px;
+  }
+
+  .dashboard-user-info {
+    display: none;
+  }
+
+  .logout-button {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
+  .dashboard-content {
+    width: calc(100% - 24px);
+    padding: 24px 0 35px;
+  }
+
+  .dashboard-welcome {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .dashboard-welcome h1,
+  .dashboard-welcome h2 {
+    font-size: 27px;
+  }
+
+  .dashboard-date {
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+
+  .dashboard-balance-card {
+    padding: 23px 19px;
+    border-radius: 18px;
+  }
+
+  .balance-main strong {
+    font-size: 35px;
+  }
+
+  .balance-details {
+    grid-template-columns: 1fr;
+    margin-top: 22px;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .dashboard-stat-card {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .stat-icon {
+    width: 34px;
+    height: 34px;
+    margin-bottom: 10px;
+  }
+
+  .dashboard-stat-card span {
+    font-size: 10px;
+  }
+
+  .dashboard-stat-card strong {
+    font-size: 15px;
+  }
+
+  .dashboard-grid {
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .dashboard-panel {
+    padding: 17px;
+    border-radius: 16px;
+  }
+
+  .panel-header {
+    margin-bottom: 15px;
+  }
+
+  .panel-header h2,
+  .panel-header h3 {
+    font-size: 16px;
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+
+  .quick-action {
+    min-height: 100px;
+    padding: 13px;
+  }
+
+  .quick-action strong {
+    font-size: 11px;
+  }
+
+  .quick-action small {
+    font-size: 9px;
+  }
+
+  .monthly-result {
+    min-width: 0;
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .monthly-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-movement {
+    padding: 11px 9px;
+  }
+
+  .dashboard-movement-icon {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  .movement-amount-income,
+  .movement-amount-expense {
+    font-size: 10px;
+  }
+
+  .dashboard-footer-summary {
+    padding: 18px;
+    border-radius: 16px;
+  }
+}
+
+/* =========================================================
+   PASO 18 — MÓVILES MUY PEQUEÑOS
+   ========================================================= */
+
+@media (max-width: 390px) {
+  .dashboard-content {
+    width: calc(100% - 18px);
+  }
+
+  .dashboard-brand strong {
+    display: none;
+  }
+
+  .dashboard-brand span {
+    font-size: 12px;
+  }
+
+  .dashboard-stats {
+    gap: 8px;
+  }
+
+  .dashboard-stat-card {
+    padding: 13px;
+  }
+
+  .dashboard-stat-card strong {
+    font-size: 14px;
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-action {
+    min-height: 82px;
+  }
+
+  .balance-main strong {
+    font-size: 31px;
+  }
+
+  .balance-detail strong {
+    font-size: 13px;
+  }
+}
