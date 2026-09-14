@@ -1,0 +1,827 @@
+.alcancias-page {
+  min-height: 100vh;
+  background:
+    linear-gradient(
+      180deg,
+      #f4f7fb 0%,
+      #eef3f9 100%
+    );
+  padding: 30px 20px 50px;
+  box-sizing: border-box;
+}
+
+.alcancias-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.alcancias-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.alcancias-header h1 {
+  margin: 10px 0 6px;
+  color: #0b1f3a;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.alcancias-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.alcancias-back-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.alcancias-back-button:hover {
+  text-decoration: underline;
+}
+
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+
+.alcancias-primary-button,
+.alcancias-secondary-button {
+  min-height: 44px;
+  border-radius: 10px;
+  padding: 10px 17px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.alcancias-primary-button {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: white;
+  box-shadow:
+    0 5px 14px rgba(37, 99, 235, 0.18);
+}
+
+.alcancias-primary-button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.alcancias-secondary-button {
+  border: 1px solid #d7dee9;
+  background: white;
+  color: #334155;
+}
+
+.alcancias-secondary-button:hover {
+  background: #f8fafc;
+  transform: translateY(-1px);
+}
+
+.alcancias-primary-button:disabled,
+.alcancias-secondary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+/* ============================================================
+   MENSAJES
+   ============================================================ */
+
+.alcancias-message {
+  margin-bottom: 20px;
+  padding: 13px 16px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.alcancias-message.success {
+  border: 1px solid #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.alcancias-message.error {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+
+/* ============================================================
+   RESUMEN
+   ============================================================ */
+
+.alcancias-resumen {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 25px;
+}
+
+.alcancia-resumen-card {
+  min-height: 105px;
+  padding: 18px;
+  box-sizing: border-box;
+  border: 1px solid #e1e8f0;
+  border-radius: 14px;
+  background: white;
+  box-shadow:
+    0 5px 18px rgba(15, 23, 42, 0.05);
+}
+
+.alcancia-resumen-card span {
+  display: block;
+  margin-bottom: 8px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.alcancia-resumen-card strong {
+  display: block;
+  color: #0b1f3a;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+
+/* ============================================================
+   ESTADO VACÍO
+   ============================================================ */
+
+.alcancias-empty {
+  padding: 55px 25px;
+  border: 1px solid #e1e8f0;
+  border-radius: 18px;
+  background: white;
+  text-align: center;
+  box-shadow:
+    0 8px 25px rgba(15, 23, 42, 0.05);
+}
+
+.alcancias-empty-icon {
+  width: 74px;
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: #eff6ff;
+  font-size: 37px;
+}
+
+.alcancias-empty h2 {
+  margin: 0 0 8px;
+  color: #0b1f3a;
+  font-size: 22px;
+}
+
+.alcancias-empty p {
+  max-width: 500px;
+  margin: 0 auto 22px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   GRID DE ALCANCÍAS
+   ============================================================ */
+
+.alcancias-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.alcancia-card {
+  padding: 21px;
+  border: 1px solid #e0e7ef;
+  border-radius: 17px;
+  background: white;
+  box-shadow:
+    0 7px 24px rgba(15, 23, 42, 0.055);
+  box-sizing: border-box;
+}
+
+.alcancia-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.alcancia-card-top h2 {
+  margin: 8px 0 0;
+  color: #0b1f3a;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.alcancia-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.alcancia-status.activa {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.alcancia-status.hoy {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.alcancia-status.vencida {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.alcancia-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.alcancia-icon-button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: white;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.alcancia-icon-button:hover {
+  background: #f8fafc;
+}
+
+.alcancia-icon-button.danger:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+
+/* ============================================================
+   DESCRIPCIÓN
+   ============================================================ */
+
+.alcancia-description {
+  margin: 15px 0 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* ============================================================
+   VALORES
+   ============================================================ */
+
+.alcancia-values {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.alcancia-values > div {
+  padding: 13px;
+  border-radius: 11px;
+  background: #f8fafc;
+}
+
+.alcancia-values span,
+.alcancia-details span,
+.alcancia-movimiento-resumen span {
+  display: block;
+  margin-bottom: 5px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.alcancia-values strong {
+  display: block;
+  color: #0b1f3a;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+
+/* ============================================================
+   PROGRESO
+   ============================================================ */
+
+.alcancia-progress-large {
+  width: 100%;
+  height: 9px;
+  margin-top: 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8eef5;
+}
+
+.alcancia-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #60a5fa
+  );
+  transition: width 0.3s ease;
+}
+
+.alcancia-progress-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 7px;
+}
+
+.alcancia-progress-info strong {
+  color: #2563eb;
+  font-size: 13px;
+}
+
+.alcancia-progress-info span {
+  color: #64748b;
+  font-size: 12px;
+  text-align: right;
+}
+
+
+/* ============================================================
+   DETALLES
+   ============================================================ */
+
+.alcancia-details {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  margin-top: 18px;
+  padding-top: 17px;
+  border-top: 1px solid #edf1f5;
+}
+
+.alcancia-details strong {
+  color: #334155;
+  font-size: 14px;
+}
+
+
+/* ============================================================
+   BOTONES DE TARJETA
+   ============================================================ */
+
+.alcancia-card-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.alcancia-card-buttons
+.alcancias-primary-button,
+.alcancia-card-buttons
+.alcancias-secondary-button {
+  flex: 1;
+}
+
+
+/* ============================================================
+   HISTORIAL
+   ============================================================ */
+
+.alcancia-historial {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #edf1f5;
+}
+
+.alcancia-historial h3 {
+  margin: 0 0 13px;
+  color: #0b1f3a;
+  font-size: 15px;
+}
+
+.alcancia-historial > p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.alcancia-historial-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.alcancia-movimiento-item {
+  padding: 11px 12px;
+  border: 1px solid #e7edf3;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.alcancia-movimiento-item > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.alcancia-movimiento-item strong {
+  font-size: 14px;
+}
+
+.alcancia-movimiento-item.aporte strong {
+  color: #15803d;
+}
+
+.alcancia-movimiento-item.retiro strong {
+  color: #dc2626;
+}
+
+.alcancia-movimiento-item span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.alcancia-movimiento-item p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   MODALES
+   ============================================================ */
+
+.alcancias-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.58);
+  box-sizing: border-box;
+}
+
+.alcancias-modal {
+  width: 100%;
+  max-width: 520px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 23px;
+  border-radius: 18px;
+  background: white;
+  box-shadow:
+    0 25px 70px rgba(15, 23, 42, 0.25);
+  box-sizing: border-box;
+}
+
+.alcancias-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.alcancias-modal-header span {
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.alcancias-modal-header h2 {
+  margin: 5px 0 0;
+  color: #0b1f3a;
+  font-size: 22px;
+}
+
+.alcancias-modal-header p {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.alcancias-modal-header > button {
+  width: 35px;
+  height: 35px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: white;
+  color: #475569;
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.alcancias-modal-header > button:hover {
+  background: #f8fafc;
+}
+
+
+/* ============================================================
+   FORMULARIOS
+   ============================================================ */
+
+.alcancias-form-group {
+  margin-bottom: 17px;
+}
+
+.alcancias-form-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.alcancias-form-group label small {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.alcancias-form-group input,
+.alcancias-form-group textarea {
+  width: 100%;
+  padding: 12px 13px;
+  border: 1px solid #d8e0e9;
+  border-radius: 10px;
+  outline: none;
+  background: white;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.alcancias-form-group input {
+  min-height: 45px;
+}
+
+.alcancias-form-group textarea {
+  resize: vertical;
+  min-height: 85px;
+}
+
+.alcancias-form-group input:focus,
+.alcancias-form-group textarea:focus {
+  border-color: #60a5fa;
+  box-shadow:
+    0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+.alcancias-form-group input:disabled,
+.alcancias-form-group textarea:disabled {
+  background: #f8fafc;
+  cursor: not-allowed;
+}
+
+.alcancias-form-group > small {
+  display: block;
+  margin-top: 6px;
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+
+/* ============================================================
+   RESUMEN DEL MOVIMIENTO
+   ============================================================ */
+
+.alcancia-movimiento-resumen {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.alcancia-movimiento-resumen > div {
+  padding: 13px;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.alcancia-movimiento-resumen strong {
+  color: #0b1f3a;
+  font-size: 17px;
+}
+
+
+/* ============================================================
+   TIPO DE MOVIMIENTO
+   ============================================================ */
+
+.alcancia-tipo-buttons {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.alcancia-tipo-button {
+  min-height: 43px;
+  border: 1px solid #d8e0e9;
+  border-radius: 10px;
+  background: white;
+  color: #475569;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.alcancia-tipo-button.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.alcancia-tipo-button.active.retiro {
+  border-color: #dc2626;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+
+/* ============================================================
+   BOTONES DEL MODAL
+   ============================================================ */
+
+.alcancias-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 23px;
+}
+
+
+/* ============================================================
+   CARGANDO
+   ============================================================ */
+
+.alcancias-loading {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+}
+
+.alcancias-loading p {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .alcancias-resumen {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .alcancias-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .alcancias-page {
+    padding: 20px 13px 35px;
+  }
+
+  .alcancias-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .alcancias-header h1 {
+    font-size: 27px;
+  }
+
+  .alcancias-header
+  .alcancias-primary-button {
+    width: 100%;
+  }
+
+  .alcancias-resumen {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .alcancia-resumen-card {
+    min-height: 95px;
+    padding: 14px;
+  }
+
+  .alcancia-resumen-card strong {
+    font-size: 18px;
+  }
+
+  .alcancia-card {
+    padding: 17px;
+  }
+
+  .alcancia-card-top {
+    gap: 10px;
+  }
+
+  .alcancia-card-top h2 {
+    font-size: 18px;
+  }
+
+  .alcancia-card-actions {
+    flex-shrink: 0;
+  }
+
+  .alcancia-values,
+  .alcancia-details {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .alcancia-card-buttons {
+    flex-direction: column;
+  }
+
+  .alcancia-card-buttons
+  .alcancias-primary-button,
+  .alcancia-card-buttons
+  .alcancias-secondary-button {
+    width: 100%;
+  }
+
+  .alcancias-modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .alcancias-modal {
+    max-width: none;
+    max-height: 94vh;
+    border-radius: 18px 18px 0 0;
+    padding: 20px 16px 25px;
+  }
+
+  .alcancias-modal-buttons {
+    flex-direction: column-reverse;
+  }
+
+  .alcancias-modal-buttons
+  button {
+    width: 100%;
+  }
+}
