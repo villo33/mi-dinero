@@ -17,6 +17,7 @@ function Dashboard({
   onRegistrarGasto,
   onAgregarDeuda,
   onAgregarMeta,
+  onAgregarAlcancia,
 }) {
   // ==========================================================
   // PASO 3: ESTADOS
@@ -782,6 +783,36 @@ function Dashboard({
 
                   <small>
                     Crea un objetivo de ahorro
+                  </small>
+
+                </span>
+
+                <span className="quick-action-arrow">
+                  →
+                </span>
+
+              </button>
+
+              {/* ALCANCÍA */}
+
+              <button
+                type="button"
+                className="quick-action piggy-action"
+                onClick={onAgregarAlcancia}
+              >
+
+                <span className="quick-action-icon">
+                  🐷
+                </span>
+
+                <span>
+
+                  <strong>
+                    Nueva alcancía
+                  </strong>
+
+                  <small>
+                    Ahorra cuando quieras y cuanto quieras
                   </small>
 
                 </span>
