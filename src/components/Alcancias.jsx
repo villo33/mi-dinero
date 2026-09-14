@@ -41,6 +41,9 @@ function Alcancias({ sesion, onVolver }) {
   const [alcanciaParaMovimiento, setAlcanciaParaMovimiento] =
     useState(null);
 
+  const [movimientoEditando, setMovimientoEditando] =
+    useState(null);
+
   const [tipoMovimiento, setTipoMovimiento] =
     useState("aporte");
 
@@ -148,25 +151,6 @@ function Alcancias({ sesion, onVolver }) {
     ) {
       return null;
     }
-
-    /*
-      PLAN DE AHORRO
-
-      Diario:
-      Divide lo que falta entre todos los días disponibles.
-
-      Semanal:
-      Divide lo que falta entre la cantidad de semanas
-      disponibles. Se redondea hacia arriba para que el
-      último período no quede incompleto.
-
-      Quincenal:
-      Divide lo que falta entre la cantidad de quincenas
-      disponibles. También se redondea hacia arriba.
-
-      De esta manera los valores nunca se disparan por
-      multiplicar el ahorro diario por 7 o 15.
-    */
 
     const ahorroDiario =
       faltante / diasRestantes;
@@ -498,6 +482,7 @@ function Alcancias({ sesion, onVolver }) {
       alcancia.id
     );
 
+    setMovimientoEditando(null);
     setAlcanciaParaMovimiento(
       alcancia
     );
@@ -510,10 +495,44 @@ function Alcancias({ sesion, onVolver }) {
     setDescripcionMovimiento("");
   };
 
+  const abrirEditarMovimiento = (
+    alcancia,
+    movimiento
+  ) => {
+    setMensaje("");
+    setError("");
+
+    setAlcanciaParaMovimiento(
+      alcancia
+    );
+
+    setMovimientoEditando(
+      movimiento
+    );
+
+    setTipoMovimiento(
+      movimiento.tipo
+    );
+
+    setMontoMovimiento(
+      String(movimiento.monto)
+    );
+
+    setFechaMovimiento(
+      movimiento.fecha ||
+        obtenerFechaLocal()
+    );
+
+    setDescripcionMovimiento(
+      movimiento.descripcion || ""
+    );
+  };
+
   const cerrarMovimiento = () => {
     if (guardandoMovimiento) return;
 
     setAlcanciaParaMovimiento(null);
+    setMovimientoEditando(null);
     setMontoMovimiento("");
     setFechaMovimiento(
       obtenerFechaLocal()
@@ -556,24 +575,140 @@ function Alcancias({ sesion, onVolver }) {
       return;
     }
 
-    const saldoActual =
+    let saldoDisponible =
       calcularSaldo(
         alcanciaParaMovimiento.id
       );
 
+    if (movimientoEditando) {
+      const montoAnterior =
+        Number(
+          movimientoEditando.monto
+        ) || 0;
+
+      if (
+        movimientoEditando.tipo ===
+        "aporte"
+      ) {
+        saldoDisponible -=
+          montoAnterior;
+      } else {
+        saldoDisponible +=
+          montoAnterior;
+      }
+    }
+
     if (
       tipoMovimiento === "retiro" &&
-      monto > saldoActual
+      monto > saldoDisponible
     ) {
       setError(
         `No puedes retirar más de ${formatearMoneda(
-          saldoActual
+          Math.max(
+            0,
+            saldoDisponible
+          )
         )}.`
       );
       return;
     }
 
     setGuardandoMovimiento(true);
+
+    if (movimientoEditando) {
+      const {
+        data,
+        error: errorActualizacion,
+      } = await supabase
+        .from("movimientos_alcancia")
+        .update({
+          tipo: tipoMovimiento,
+          monto,
+          fecha: fechaMovimiento,
+          descripcion:
+            descripcionMovimiento.trim() ||
+            null,
+        })
+        .eq(
+          "id",
+          movimientoEditando.id
+        )
+        .eq(
+          "usuario_id",
+          usuarioId
+        )
+        .eq(
+          "alcancia_id",
+          alcanciaParaMovimiento.id
+        )
+        .select()
+        .single();
+
+      if (errorActualizacion) {
+        console.error(
+          "Error actualizando movimiento:",
+          errorActualizacion
+        );
+
+        setError(
+          "No fue posible actualizar el movimiento."
+        );
+
+        setGuardandoMovimiento(false);
+        return;
+      }
+
+      setMovimientos(
+        (anteriores) => ({
+          ...anteriores,
+          [alcanciaParaMovimiento.id]:
+            (
+              anteriores[
+                alcanciaParaMovimiento.id
+              ] || []
+            )
+              .map((movimiento) =>
+                movimiento.id ===
+                movimientoEditando.id
+                  ? data
+                  : movimiento
+              )
+              .sort((a, b) => {
+                const fechaA =
+                  a.fecha || "";
+
+                const fechaB =
+                  b.fecha || "";
+
+                if (
+                  fechaA !==
+                  fechaB
+                ) {
+                  return fechaB.localeCompare(
+                    fechaA
+                  );
+                }
+
+                return (
+                  new Date(
+                    b.created_at || 0
+                  ) -
+                  new Date(
+                    a.created_at || 0
+                  )
+                );
+              }),
+        })
+      );
+
+      setMensaje(
+        "Movimiento actualizado correctamente."
+      );
+
+      cerrarMovimiento();
+      setGuardandoMovimiento(false);
+      return;
+    }
 
     const {
       data,
@@ -644,6 +779,61 @@ function Alcancias({ sesion, onVolver }) {
     cerrarMovimiento();
 
     setGuardandoMovimiento(false);
+  };
+
+  const eliminarMovimiento = async (
+    alcancia,
+    movimiento
+  ) => {
+    if (!usuarioId) return;
+
+    const confirmar =
+      window.confirm(
+        `¿Quieres eliminar este movimiento de ${formatearMoneda(
+          movimiento.monto
+        )}?`
+      );
+
+    if (!confirmar) return;
+
+    setMensaje("");
+    setError("");
+
+    const {
+      error: errorEliminacion,
+    } = await supabase
+      .from("movimientos_alcancia")
+      .delete()
+      .eq("id", movimiento.id)
+      .eq("usuario_id", usuarioId)
+      .eq("alcancia_id", alcancia.id);
+
+    if (errorEliminacion) {
+      console.error(
+        "Error eliminando movimiento:",
+        errorEliminacion
+      );
+
+      setError(
+        "No fue posible eliminar el movimiento."
+      );
+
+      return;
+    }
+
+    setMovimientos((anteriores) => ({
+      ...anteriores,
+      [alcancia.id]: (
+        anteriores[alcancia.id] || []
+      ).filter(
+        (item) =>
+          item.id !== movimiento.id
+      ),
+    }));
+
+    setMensaje(
+      "Movimiento eliminado correctamente."
+    );
   };
 
   const eliminarAlcancia = async (
@@ -1325,6 +1515,38 @@ function Alcancias({ sesion, onVolver }) {
                                     </p>
                                   )}
 
+                                  <div className="alcancia-movimiento-actions">
+
+                                    <button
+                                      type="button"
+                                      className="alcancia-icon-button"
+                                      onClick={() =>
+                                        abrirEditarMovimiento(
+                                          alcancia,
+                                          movimiento
+                                        )
+                                      }
+                                      title="Editar movimiento"
+                                    >
+                                      ✏️
+                                    </button>
+
+                                    <button
+                                      type="button"
+                                      className="alcancia-icon-button danger"
+                                      onClick={() =>
+                                        eliminarMovimiento(
+                                          alcancia,
+                                          movimiento
+                                        )
+                                      }
+                                      title="Eliminar movimiento"
+                                    >
+                                      🗑️
+                                    </button>
+
+                                  </div>
+
                                 </div>
                               )
                             )}
@@ -1555,12 +1777,16 @@ function Alcancias({ sesion, onVolver }) {
 
               <div>
                 <span>
-                  AHORRO
+                  {movimientoEditando
+                    ? "EDITAR MOVIMIENTO"
+                    : "AHORRO"}
                 </span>
 
                 <h2>
-                  {tipoMovimiento ===
-                  "aporte"
+                  {movimientoEditando
+                    ? "Editar movimiento"
+                    : tipoMovimiento ===
+                      "aporte"
                     ? "Aportar dinero"
                     : "Retirar dinero"}
                 </h2>
@@ -1782,6 +2008,8 @@ function Alcancias({ sesion, onVolver }) {
                 >
                   {guardandoMovimiento
                     ? "Guardando..."
+                    : movimientoEditando
+                    ? "Guardar cambios"
                     : tipoMovimiento ===
                       "aporte"
                     ? "Registrar aporte"
