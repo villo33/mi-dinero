@@ -286,6 +286,56 @@
     0 13px 32px rgba(15, 23, 42, 0.085);
 }
 
+/* ============================================================
+   ALCANCÍA COMPLETADA
+   ============================================================ */
+
+.alcancia-card-completada {
+  border-color: #86efac;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(34, 197, 94, 0.10),
+      transparent 35%
+    ),
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #f0fdf4 100%
+    );
+  box-shadow:
+    0 10px 30px rgba(34, 197, 94, 0.12);
+}
+
+.alcancia-card-completada::before {
+  height: 5px;
+  background:
+    linear-gradient(
+      90deg,
+      #16a34a,
+      #22c55e,
+      #4ade80,
+      #22c55e,
+      #16a34a
+    );
+  background-size: 200% 100%;
+  animation: alcanciaBarraCompletada 3s linear infinite;
+}
+
+@keyframes alcanciaBarraCompletada {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* ============================================================
+   ENCABEZADO DE TARJETA
+   ============================================================ */
+
 .alcancia-card-top {
   display: flex;
   align-items: flex-start;
@@ -299,6 +349,10 @@
   font-size: 21px;
   font-weight: 800;
   letter-spacing: -0.3px;
+}
+
+.alcancia-card-completada .alcancia-card-top h2 {
+  color: #14532d;
 }
 
 .alcancia-status {
@@ -327,6 +381,12 @@
   border: 1px solid #e2e8f0;
   background: #f1f5f9;
   color: #475569;
+}
+
+.alcancia-card-completada .alcancia-status {
+  border-color: #86efac;
+  background: #dcfce7;
+  color: #15803d;
 }
 
 .alcancia-card-actions {
@@ -393,6 +453,11 @@
   background: linear-gradient(135deg, #f8fafc, #f5f8fc);
 }
 
+.alcancia-card-completada .alcancia-values > div {
+  border-color: #dcfce7;
+  background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+}
+
 .alcancia-values span,
 .alcancia-details span,
 .alcancia-movimiento-resumen span {
@@ -408,6 +473,10 @@
   color: #0b1f3a;
   font-size: 18px;
   font-weight: 800;
+}
+
+.alcancia-card-completada .alcancia-values strong {
+  color: #166534;
 }
 
 /* ============================================================
@@ -432,6 +501,41 @@
   transition: width 0.35s ease;
 }
 
+.alcancia-progress-completed {
+  height: 13px;
+  background: #dcfce7;
+  box-shadow:
+    inset 0 1px 2px rgba(22, 101, 52, 0.08),
+    0 0 0 1px rgba(34, 197, 94, 0.10);
+}
+
+.alcancia-progress-completed .alcancia-progress-fill {
+  background:
+    linear-gradient(
+      90deg,
+      #16a34a,
+      #22c55e,
+      #4ade80,
+      #22c55e,
+      #16a34a
+    );
+  background-size: 200% 100%;
+  box-shadow:
+    0 3px 10px rgba(34, 197, 94, 0.28);
+  animation:
+    alcanciaProgresoCompletado 2.8s linear infinite;
+}
+
+@keyframes alcanciaProgresoCompletado {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
 .alcancia-progress-info {
   display: flex;
   align-items: center;
@@ -450,6 +554,221 @@
   color: #64748b;
   font-size: 12px;
   text-align: right;
+}
+
+.alcancia-progress-info-completed {
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: rgba(220, 252, 231, 0.75);
+}
+
+.alcancia-progress-info-completed strong {
+  color: #15803d;
+  font-size: 15px;
+}
+
+.alcancia-progress-info-completed span {
+  color: #166534;
+  font-weight: 700;
+}
+
+/* ============================================================
+   CELEBRACIÓN DEL OBJETIVO
+   ============================================================ */
+
+.alcancia-celebracion {
+  position: relative;
+  margin-top: 18px;
+  padding: 24px 18px 21px;
+  overflow: hidden;
+  border: 1px solid #86efac;
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(250, 204, 21, 0.22),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      #f0fdf4 0%,
+      #dcfce7 50%,
+      #ecfdf5 100%
+    );
+  text-align: center;
+  box-shadow:
+    0 10px 28px rgba(34, 197, 94, 0.13);
+  animation:
+    alcanciaCelebracionEntrada 0.55s ease-out both;
+}
+
+.alcancia-celebracion::before,
+.alcancia-celebracion::after {
+  content: "";
+  position: absolute;
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.alcancia-celebracion::before {
+  top: -42px;
+  left: -35px;
+  background: rgba(250, 204, 21, 0.13);
+}
+
+.alcancia-celebracion::after {
+  right: -35px;
+  bottom: -45px;
+  background: rgba(34, 197, 94, 0.12);
+}
+
+@keyframes alcanciaCelebracionEntrada {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.alcancia-celebracion-confeti {
+  position: absolute;
+  top: 7px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  pointer-events: none;
+  font-size: 17px;
+}
+
+.alcancia-celebracion-confeti span {
+  display: inline-block;
+  animation:
+    alcanciaConfeti 2.4s ease-in-out infinite;
+}
+
+.alcancia-celebracion-confeti span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.alcancia-celebracion-confeti span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.alcancia-celebracion-confeti span:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+.alcancia-celebracion-confeti span:nth-child(5) {
+  animation-delay: 0.8s;
+}
+
+.alcancia-celebracion-confeti span:nth-child(6) {
+  animation-delay: 1s;
+}
+
+.alcancia-celebracion-confeti span:nth-child(7) {
+  animation-delay: 1.2s;
+}
+
+@keyframes alcanciaConfeti {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.65;
+  }
+
+  50% {
+    transform: translateY(5px) rotate(12deg) scale(1.15);
+    opacity: 1;
+  }
+}
+
+.alcancia-celebracion-icon {
+  position: relative;
+  z-index: 2;
+  width: 74px;
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px auto 11px;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff,
+      #dcfce7
+    );
+  font-size: 38px;
+  box-shadow:
+    0 8px 20px rgba(22, 101, 52, 0.15);
+  animation:
+    alcanciaCerdoCelebracion 2.2s ease-in-out infinite;
+}
+
+@keyframes alcanciaCerdoCelebracion {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.08) rotate(-3deg);
+  }
+}
+
+.alcancia-celebracion-content {
+  position: relative;
+  z-index: 2;
+}
+
+.alcancia-celebracion-content > span {
+  display: block;
+  margin-bottom: 5px;
+  color: #15803d;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.alcancia-celebracion-content h3 {
+  margin: 0;
+  color: #14532d;
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.alcancia-celebracion-content p {
+  margin: 7px 0 9px;
+  color: #166534;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.alcancia-celebracion-content > strong {
+  display: block;
+  color: #15803d;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+}
+
+.alcancia-celebracion-content small {
+  display: block;
+  margin-top: 7px;
+  color: #4d7c5c;
+  font-size: 11px;
+  font-weight: 600;
 }
 
 /* ============================================================
@@ -541,6 +860,14 @@
   font-size: 14px;
 }
 
+.alcancia-card-completada .alcancia-details {
+  border-top-color: #dcfce7;
+}
+
+.alcancia-card-completada .alcancia-details strong {
+  color: #166534;
+}
+
 /* ============================================================
    BOTONES DE TARJETA
    ============================================================ */
@@ -623,6 +950,20 @@
   color: #64748b;
   font-size: 12px;
   line-height: 1.4;
+}
+
+.alcancia-movimiento-actions {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-end !important;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.alcancia-movimiento-actions .alcancia-icon-button {
+  width: 32px;
+  height: 32px;
+  font-size: 13px;
 }
 
 /* ============================================================
@@ -953,6 +1294,24 @@
     width: 100%;
   }
 
+  .alcancia-celebracion {
+    padding: 22px 14px 19px;
+  }
+
+  .alcancia-celebracion-icon {
+    width: 66px;
+    height: 66px;
+    font-size: 34px;
+  }
+
+  .alcancia-celebracion-content h3 {
+    font-size: 22px;
+  }
+
+  .alcancia-celebracion-content > strong {
+    font-size: 20px;
+  }
+
   .alcancias-modal-overlay {
     align-items: flex-end;
     padding: 0;
@@ -986,5 +1345,27 @@
 
   .alcancia-movimiento-resumen {
     grid-template-columns: 1fr;
+  }
+
+  .alcancia-celebracion-content h3 {
+    font-size: 20px;
+  }
+
+  .alcancia-celebracion-confeti {
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alcancia-card-completada::before,
+  .alcancia-progress-completed .alcancia-progress-fill,
+  .alcancia-celebracion,
+  .alcancia-celebracion-confeti span,
+  .alcancia-celebracion-icon {
+    animation: none;
+  }
+
+  .alcancia-progress-fill {
+    transition: none;
   }
 }
