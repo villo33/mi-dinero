@@ -1132,6 +1132,10 @@ function Alcancias({ sesion, onVolver }) {
                       )
                     : null;
 
+                const objetivoAlcanzado =
+                  objetivo !== null &&
+                  saldo >= objetivo;
+
                 const planAhorro =
                   calcularPlanAhorro(
                     saldo,
@@ -1151,7 +1155,11 @@ function Alcancias({ sesion, onVolver }) {
 
                 return (
                   <article
-                    className="alcancia-card"
+                    className={`alcancia-card ${
+                      objetivoAlcanzado
+                        ? "alcancia-card-completada"
+                        : ""
+                    }`}
                     key={alcancia.id}
                   >
 
@@ -1252,19 +1260,28 @@ function Alcancias({ sesion, onVolver }) {
 
                     {objetivo !== null && (
                       <>
-                        <div className="alcancia-progress-large">
-
+                        <div
+                          className={`alcancia-progress-large ${
+                            objetivoAlcanzado
+                              ? "alcancia-progress-completed"
+                              : ""
+                          }`}
+                        >
                           <div
                             className="alcancia-progress-fill"
                             style={{
                               width: `${porcentaje}%`,
                             }}
                           ></div>
-
                         </div>
 
-                        <div className="alcancia-progress-info">
-
+                        <div
+                          className={`alcancia-progress-info ${
+                            objetivoAlcanzado
+                              ? "alcancia-progress-info-completed"
+                              : ""
+                          }`}
+                        >
                           <strong>
                             {porcentaje.toFixed(
                               0
@@ -1273,104 +1290,146 @@ function Alcancias({ sesion, onVolver }) {
                           </strong>
 
                           <span>
-                            {saldo >=
-                            objetivo
+                            {objetivoAlcanzado
                               ? "Objetivo alcanzado"
                               : `Faltan ${formatearMoneda(
                                   objetivo -
                                     saldo
                                 )}`}
                           </span>
-
                         </div>
 
-                        {planAhorro && (
-                          <div className="alcancia-plan-ahorro">
+                        {objetivoAlcanzado ? (
+                          <div className="alcancia-celebracion">
 
-                            <div className="alcancia-plan-header">
-
-                              <div>
-                                <span>
-                                  PLAN DE AHORRO
-                                </span>
-
-                                <h3>
-                                  Para alcanzar tu objetivo
-                                </h3>
-                              </div>
-
-                              <strong>
-                                {
-                                  planAhorro.diasRestantes
-                                }{" "}
-                                {
-                                  planAhorro.diasRestantes ===
-                                  1
-                                    ? "día"
-                                    : "días"
-                                }{" "}
-                                restantes
-                              </strong>
-
+                            <div className="alcancia-celebracion-confeti">
+                              <span>🎉</span>
+                              <span>✨</span>
+                              <span>🎊</span>
+                              <span>💰</span>
+                              <span>⭐</span>
+                              <span>🎉</span>
+                              <span>✨</span>
                             </div>
 
-                            <div className="alcancia-plan-grid">
-
-                              <div className="alcancia-plan-item">
-
-                                <span>
-                                  Diario
-                                </span>
-
-                                <strong>
-                                  {formatearMoneda(
-                                    planAhorro.ahorroDiario
-                                  )}
-                                </strong>
-
-                              </div>
-
-                              <div className="alcancia-plan-item">
-
-                                <span>
-                                  Semanal
-                                </span>
-
-                                <strong>
-                                  {formatearMoneda(
-                                    planAhorro.ahorroSemanal
-                                  )}
-                                </strong>
-
-                              </div>
-
-                              <div className="alcancia-plan-item">
-
-                                <span>
-                                  Quincenal
-                                </span>
-
-                                <strong>
-                                  {formatearMoneda(
-                                    planAhorro.ahorroQuincenal
-                                  )}
-                                </strong>
-
-                              </div>
-
+                            <div className="alcancia-celebracion-icon">
+                              🐷
                             </div>
 
-                            <p>
-                              Te faltan{" "}
+                            <div className="alcancia-celebracion-content">
+                              <span>
+                                ¡OBJETIVO COMPLETADO!
+                              </span>
+
+                              <h3>
+                                ¡Felicidades!
+                              </h3>
+
+                              <p>
+                                Alcanzaste el objetivo de tu alcancía.
+                              </p>
+
                               <strong>
                                 {formatearMoneda(
-                                  planAhorro.faltante
+                                  objetivo
                                 )}
-                              </strong>{" "}
-                              para completar tu objetivo.
-                            </p>
+                              </strong>
+
+                              <small>
+                                Todo tu esfuerzo valió la pena.
+                              </small>
+                            </div>
 
                           </div>
+                        ) : (
+                          planAhorro && (
+                            <div className="alcancia-plan-ahorro">
+
+                              <div className="alcancia-plan-header">
+
+                                <div>
+                                  <span>
+                                    PLAN DE AHORRO
+                                  </span>
+
+                                  <h3>
+                                    Para alcanzar tu objetivo
+                                  </h3>
+                                </div>
+
+                                <strong>
+                                  {
+                                    planAhorro.diasRestantes
+                                  }{" "}
+                                  {
+                                    planAhorro.diasRestantes ===
+                                    1
+                                      ? "día"
+                                      : "días"
+                                  }{" "}
+                                  restantes
+                                </strong>
+
+                              </div>
+
+                              <div className="alcancia-plan-grid">
+
+                                <div className="alcancia-plan-item">
+
+                                  <span>
+                                    Diario
+                                  </span>
+
+                                  <strong>
+                                    {formatearMoneda(
+                                      planAhorro.ahorroDiario
+                                    )}
+                                  </strong>
+
+                                </div>
+
+                                <div className="alcancia-plan-item">
+
+                                  <span>
+                                    Semanal
+                                  </span>
+
+                                  <strong>
+                                    {formatearMoneda(
+                                      planAhorro.ahorroSemanal
+                                    )}
+                                  </strong>
+
+                                </div>
+
+                                <div className="alcancia-plan-item">
+
+                                  <span>
+                                    Quincenal
+                                  </span>
+
+                                  <strong>
+                                    {formatearMoneda(
+                                      planAhorro.ahorroQuincenal
+                                    )}
+                                  </strong>
+
+                                </div>
+
+                              </div>
+
+                              <p>
+                                Te faltan{" "}
+                                <strong>
+                                  {formatearMoneda(
+                                    planAhorro.faltante
+                                  )}
+                                </strong>{" "}
+                                para completar tu objetivo.
+                              </p>
+
+                            </div>
+                          )
                         )}
 
                       </>
