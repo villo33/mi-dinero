@@ -92,6 +92,18 @@ const CATEGORIAS_PREDETERMINADAS = [
     tipo: "gasto",
   },
   {
+    id: "gasto-diezmo",
+    usuario_id: null,
+    nombre: "Diezmo",
+    tipo: "gasto",
+  },
+  {
+    id: "gasto-deuda",
+    usuario_id: null,
+    nombre: "Deuda",
+    tipo: "gasto",
+  },
+  {
     id: "gasto-otro",
     usuario_id: null,
     nombre: "Otro",
