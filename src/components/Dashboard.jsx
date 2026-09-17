@@ -25,7 +25,8 @@ function Dashboard({
 
   const [movimientos, setMovimientos] = useState([]);
   const [deudas, setDeudas] = useState([]);
-  const [metas, setMetas] = useState([]);
+  const [alcancias, setAlcancias] = useState([]);
+  const [movimientosAlcancias, setMovimientosAlcancias] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
 
@@ -45,7 +46,8 @@ function Dashboard({
       const [
         movimientosRespuesta,
         deudasRespuesta,
-        metasRespuesta,
+        alcanciasRespuesta,
+        movimientosAlcanciasRespuesta,
       ] = await Promise.all([
         // ------------------------------------------------------
         // MOVIMIENTOS
@@ -71,16 +73,31 @@ function Dashboard({
           }),
 
         // ------------------------------------------------------
-        // METAS
+        // ALCANCÍAS
         // ------------------------------------------------------
 
         supabase
-          .from("metas")
+          .from("alcancias")
           .select("*")
           .eq("usuario_id", usuarioId)
           .order("fecha_objetivo", {
             ascending: true,
             nullsFirst: false,
+          }),
+
+        // ------------------------------------------------------
+        // MOVIMIENTOS DE ALCANCÍAS
+        // ------------------------------------------------------
+
+        supabase
+          .from("movimientos_alcancia")
+          .select("*")
+          .eq("usuario_id", usuarioId)
+          .order("fecha", {
+            ascending: false,
+          })
+          .order("created_at", {
+            ascending: false,
           }),
       ]);
 
@@ -101,11 +118,19 @@ function Dashboard({
       }
 
       // ========================================================
-      // COMPROBAR METAS
+      // COMPROBAR ALCANCÍAS
       // ========================================================
 
-      if (metasRespuesta.error) {
-        throw metasRespuesta.error;
+      if (alcanciasRespuesta.error) {
+        throw alcanciasRespuesta.error;
+      }
+
+      // ========================================================
+      // COMPROBAR MOVIMIENTOS DE ALCANCÍAS
+      // ========================================================
+
+      if (movimientosAlcanciasRespuesta.error) {
+        throw movimientosAlcanciasRespuesta.error;
       }
 
       // ========================================================
@@ -114,7 +139,10 @@ function Dashboard({
 
       setMovimientos(movimientosRespuesta.data || []);
       setDeudas(deudasRespuesta.data || []);
-      setMetas(metasRespuesta.data || []);
+      setAlcancias(alcanciasRespuesta.data || []);
+      setMovimientosAlcancias(
+        movimientosAlcanciasRespuesta.data || []
+      );
     } catch (err) {
       console.error("Error cargando dashboard:", err);
 
@@ -219,37 +247,62 @@ function Dashboard({
       );
 
     // ==========================================================
-    // PASO 9: CALCULAR AHORRO DE METAS
+    // PASO 9: CALCULAR DINERO EN ALCANCÍAS
     // ==========================================================
 
-    const ahorroTotal = metas.reduce(
-      (total, meta) =>
-        total +
-        Number(meta.valor_actual || 0),
+    const ahorroAlcancias = movimientosAlcancias.reduce(
+      (total, movimiento) => {
+        const monto = Number(movimiento.monto || 0);
+
+        if (movimiento.tipo === "aporte") {
+          return total + monto;
+        }
+
+        if (movimiento.tipo === "retiro") {
+          return total - monto;
+        }
+
+        return total;
+      },
       0
     );
 
-    const valorObjetivoTotal = metas.reduce(
-      (total, meta) =>
+    // ==========================================================
+    // PASO 10: OBJETIVOS DE ALCANCÍAS
+    // ==========================================================
+
+    const alcanciasConObjetivo = alcancias.filter(
+      (alcancia) =>
+        alcancia.monto_objetivo !== null &&
+        Number(alcancia.monto_objetivo || 0) > 0
+    );
+
+    const objetivoAlcancias = alcanciasConObjetivo.reduce(
+      (total, alcancia) =>
         total +
-        Number(meta.valor_objetivo || 0),
+        Number(alcancia.monto_objetivo || 0),
       0
     );
 
     // ==========================================================
-    // PASO 10: PORCENTAJE DE METAS
+    // PASO 11: PORCENTAJE DE ALCANCÍAS
     // ==========================================================
 
-    const porcentajeMetas =
-      valorObjetivoTotal > 0
+    const porcentajeAlcancias =
+      objetivoAlcancias > 0
         ? Math.min(
             100,
-            (ahorroTotal / valorObjetivoTotal) * 100
+            Math.max(
+              0,
+              (ahorroAlcancias /
+                objetivoAlcancias) *
+                100
+            )
           )
         : 0;
 
     // ==========================================================
-    // PASO 11: PORCENTAJE DE GASTOS
+    // PASO 12: PORCENTAJE DE GASTOS
     // ==========================================================
 
     const porcentajeGastos =
@@ -261,7 +314,7 @@ function Dashboard({
         : 0;
 
     // ==========================================================
-    // PASO 12: DEVOLVER TODOS LOS DATOS CALCULADOS
+    // PASO 13: DEVOLVER DATOS
     // ==========================================================
 
     return {
@@ -271,21 +324,58 @@ function Dashboard({
       gastosMes,
       balance,
       deudasPendientes,
-      ahorroTotal,
-      valorObjetivoTotal,
-      porcentajeMetas,
+      ahorroAlcancias,
+      objetivoAlcancias,
+      porcentajeAlcancias,
       porcentajeGastos,
     };
-  }, [movimientos, deudas, metas]);
+  }, [
+    movimientos,
+    deudas,
+    alcancias,
+    movimientosAlcancias,
+  ]);
 
   // ==========================================================
-  // PASO 13: TOMAR LOS 5 MOVIMIENTOS MÁS RECIENTES
+  // PASO 14: TOMAR LOS 5 MOVIMIENTOS MÁS RECIENTES
   // ==========================================================
 
-  const movimientosRecientes = movimientos.slice(0, 5);
+  const movimientosRecientes =
+    movimientos.slice(0, 5);
 
   // ==========================================================
-  // PASO 14: FORMATEAR DINERO EN PESOS COLOMBIANOS
+  // PASO 15: CALCULAR SALDO DE CADA ALCANCÍA
+  // ==========================================================
+
+  const calcularSaldoAlcancia = (alcanciaId) => {
+    return movimientosAlcancias
+      .filter(
+        (movimiento) =>
+          Number(movimiento.alcancia_id) ===
+          Number(alcanciaId)
+      )
+      .reduce(
+        (total, movimiento) => {
+          const monto = Number(
+            movimiento.monto || 0
+          );
+
+          if (movimiento.tipo === "aporte") {
+            return total + monto;
+          }
+
+          if (movimiento.tipo === "retiro") {
+            return total - monto;
+          }
+
+          return total;
+        },
+        0
+      );
+  };
+
+  // ==========================================================
+  // PASO 16: FORMATEAR DINERO
   // ==========================================================
 
   const formatearDinero = (valor) => {
@@ -297,7 +387,7 @@ function Dashboard({
   };
 
   // ==========================================================
-  // PASO 15: FORMATEAR FECHAS
+  // PASO 17: FORMATEAR FECHAS
   // ==========================================================
 
   const formatearFecha = (valor) => {
@@ -312,7 +402,7 @@ function Dashboard({
   };
 
   // ==========================================================
-  // PASO 16: OBTENER NOMBRE DEL USUARIO
+  // PASO 18: OBTENER NOMBRE DEL USUARIO
   // ==========================================================
 
   const nombreUsuario =
@@ -321,7 +411,7 @@ function Dashboard({
     "Usuario";
 
   // ==========================================================
-  // PASO 17: PANTALLA DE CARGA
+  // PASO 19: PANTALLA DE CARGA
   // ==========================================================
 
   if (cargando) {
@@ -337,14 +427,14 @@ function Dashboard({
   }
 
   // ==========================================================
-  // PASO 18: DASHBOARD PRINCIPAL
+  // PASO 20: DASHBOARD PRINCIPAL
   // ==========================================================
 
   return (
     <div className="dashboard-page">
 
       {/* ======================================================
-          PASO 19: ENCABEZADO
+          ENCABEZADO
       ====================================================== */}
 
       <header className="dashboard-header">
@@ -398,13 +488,13 @@ function Dashboard({
       </header>
 
       {/* ======================================================
-          PASO 20: CONTENIDO PRINCIPAL
+          CONTENIDO PRINCIPAL
       ====================================================== */}
 
       <main className="dashboard-content">
 
         {/* ====================================================
-            PASO 21: BIENVENIDA
+            BIENVENIDA
         ==================================================== */}
 
         <section className="dashboard-welcome">
@@ -441,7 +531,7 @@ function Dashboard({
         </section>
 
         {/* ====================================================
-            PASO 22: MENSAJE DE ERROR
+            ERROR
         ==================================================== */}
 
         {error && (
@@ -457,7 +547,7 @@ function Dashboard({
         )}
 
         {/* ====================================================
-            PASO 23: BALANCE PRINCIPAL
+            BALANCE PRINCIPAL
         ==================================================== */}
 
         <section className="dashboard-balance-card">
@@ -491,8 +581,6 @@ function Dashboard({
 
           <div className="balance-details">
 
-            {/* INGRESOS */}
-
             <div className="balance-detail">
 
               <span className="balance-detail-icon income-icon">
@@ -514,8 +602,6 @@ function Dashboard({
               </div>
 
             </div>
-
-            {/* GASTOS */}
 
             <div className="balance-detail">
 
@@ -544,12 +630,12 @@ function Dashboard({
         </section>
 
         {/* ====================================================
-            PASO 24: TARJETAS DE ESTADÍSTICAS
+            TARJETAS DE ESTADÍSTICAS
         ==================================================== */}
 
         <section className="dashboard-stats">
 
-          {/* INGRESOS DEL MES */}
+          {/* INGRESOS */}
 
           <article className="dashboard-stat-card">
 
@@ -573,7 +659,7 @@ function Dashboard({
 
           </article>
 
-          {/* GASTOS DEL MES */}
+          {/* GASTOS */}
 
           <article className="dashboard-stat-card">
 
@@ -621,23 +707,23 @@ function Dashboard({
 
           </article>
 
-          {/* METAS */}
+          {/* ALCANCÍAS */}
 
           <article className="dashboard-stat-card">
 
-            <div className="stat-icon stat-goal">
-              ★
+            <div className="stat-icon stat-piggy">
+              🐷
             </div>
 
             <div>
 
               <span>
-                Ahorro en metas
+                Ahorro en alcancías
               </span>
 
               <strong>
                 {formatearDinero(
-                  datosFinancieros.ahorroTotal
+                  datosFinancieros.ahorroAlcancias
                 )}
               </strong>
 
@@ -648,7 +734,7 @@ function Dashboard({
         </section>
 
         {/* ====================================================
-            PASO 25: ACCIONES RÁPIDAS
+            ACCIONES RÁPIDAS
         ==================================================== */}
 
         <section className="dashboard-grid">
@@ -753,36 +839,6 @@ function Dashboard({
 
                   <small>
                     Registra una nueva deuda
-                  </small>
-
-                </span>
-
-                <span className="quick-action-arrow">
-                  →
-                </span>
-
-              </button>
-
-              {/* META */}
-
-              <button
-                type="button"
-                className="quick-action goal-action"
-                onClick={onAgregarMeta}
-              >
-
-                <span className="quick-action-icon">
-                  ★
-                </span>
-
-                <span>
-
-                  <strong>
-                    Nueva meta
-                  </strong>
-
-                  <small>
-                    Crea un objetivo de ahorro
                   </small>
 
                 </span>
@@ -950,7 +1006,7 @@ function Dashboard({
         </section>
 
         {/* ====================================================
-            PASO 32: MOVIMIENTOS RECIENTES + METAS
+            MOVIMIENTOS RECIENTES + ALCANCÍAS
         ==================================================== */}
 
         <section className="dashboard-grid">
@@ -1069,7 +1125,7 @@ function Dashboard({
 
           </div>
 
-          {/* METAS */}
+          {/* ALCANCÍAS */}
 
           <div className="dashboard-panel">
 
@@ -1078,44 +1134,44 @@ function Dashboard({
               <div>
 
                 <span className="dashboard-label">
-                  OBJETIVOS
+                  AHORRO FLEXIBLE
                 </span>
 
                 <h2>
-                  Mis metas
+                  Mis alcancías
                 </h2>
 
               </div>
 
               <span className="panel-count">
-                {metas.length}
+                {alcancias.length}
               </span>
 
             </div>
 
-            {metas.length === 0 ? (
+            {alcancias.length === 0 ? (
 
               <div className="dashboard-empty">
 
                 <div className="dashboard-empty-icon">
-                  ★
+                  🐷
                 </div>
 
                 <strong>
-                  No tienes metas creadas
+                  No tienes alcancías creadas
                 </strong>
 
                 <p>
-                  Crea tu primera meta de ahorro
-                  y empieza a avanzar.
+                  Crea una alcancía y empieza a
+                  guardar dinero a tu ritmo.
                 </p>
 
                 <button
                   type="button"
                   className="dashboard-empty-action"
-                  onClick={onAgregarMeta}
+                  onClick={onAgregarAlcancia}
                 >
-                  Crear primera meta
+                  Crear primera alcancía
                 </button>
 
               </div>
@@ -1124,74 +1180,100 @@ function Dashboard({
 
               <div className="dashboard-goals">
 
-                {metas.slice(0, 4).map(
-                  (meta) => {
+                {alcancias.slice(0, 4).map(
+                  (alcancia) => {
+
+                    const saldo =
+                      calcularSaldoAlcancia(
+                        alcancia.id
+                      );
 
                     const objetivo =
-                      Number(
-                        meta.valor_objetivo || 0
-                      );
-
-                    const actual =
-                      Number(
-                        meta.valor_actual || 0
-                      );
+                      alcancia.monto_objetivo !== null
+                        ? Number(
+                            alcancia.monto_objetivo || 0
+                          )
+                        : null;
 
                     const porcentaje =
+                      objetivo &&
                       objetivo > 0
                         ? Math.min(
                             100,
-                            (actual /
-                              objetivo) *
-                              100
+                            Math.max(
+                              0,
+                              (saldo /
+                                objetivo) *
+                                100
+                            )
                           )
-                        : 0;
+                        : null;
 
                     return (
                       <div
                         className="dashboard-goal"
-                        key={meta.id}
+                        key={alcancia.id}
                       >
 
                         <div className="goal-top">
 
                           <strong>
-                            {meta.nombre}
+                            🐷 {alcancia.nombre}
                           </strong>
 
                           <span>
-                            {Math.round(
-                              porcentaje
-                            )}
-                            %
+                            {objetivo
+                              ? `${Math.round(
+                                  porcentaje
+                                )}%`
+                              : "Flexible"}
                           </span>
 
                         </div>
 
-                        <div className="goal-progress-track">
+                        {objetivo ? (
 
-                          <div
-                            className="goal-progress-fill"
-                            style={{
-                              width: `${porcentaje}%`,
-                            }}
-                          ></div>
+                          <div className="goal-progress-track">
 
-                        </div>
+                            <div
+                              className="goal-progress-fill"
+                              style={{
+                                width: `${porcentaje}%`,
+                              }}
+                            ></div>
+
+                          </div>
+
+                        ) : (
+
+                          <div className="goal-progress-track">
+
+                            <div
+                              className="goal-progress-fill"
+                              style={{
+                                width: "100%",
+                                opacity: 0.25,
+                              }}
+                            ></div>
+
+                          </div>
+
+                        )}
 
                         <div className="goal-bottom">
 
                           <span>
                             {formatearDinero(
-                              actual
+                              saldo
                             )}
                           </span>
 
                           <span>
-                            de{" "}
-                            {formatearDinero(
-                              objetivo
-                            )}
+                            {objetivo
+                              ? `de ${formatearDinero(
+                                  objetivo
+                                )}`
+                              : "ahorro acumulado"}
                           </span>
 
                         </div>
@@ -1209,7 +1291,7 @@ function Dashboard({
         </section>
 
         {/* ====================================================
-            PASO 35: RESUMEN DE AHORRO
+            RESUMEN DE ALCANCÍAS
         ==================================================== */}
 
         <section className="dashboard-footer-summary">
@@ -1217,18 +1299,19 @@ function Dashboard({
           <div>
 
             <span className="dashboard-label">
-              RESUMEN DE AHORRO
+              RESUMEN DE ALCANCÍAS
             </span>
 
             <strong>
               {Math.round(
-                datosFinancieros.porcentajeMetas
+                datosFinancieros.porcentajeAlcancias
               )}
               %
             </strong>
 
             <p>
-              Progreso total de tus metas de ahorro.
+              Progreso de tus alcancías que tienen
+              un objetivo definido.
             </p>
 
           </div>
@@ -1240,7 +1323,7 @@ function Dashboard({
               <div
                 className="footer-progress-fill"
                 style={{
-                  width: `${datosFinancieros.porcentajeMetas}%`,
+                  width: `${datosFinancieros.porcentajeAlcancias}%`,
                 }}
               ></div>
 
@@ -1248,11 +1331,11 @@ function Dashboard({
 
             <span>
               {formatearDinero(
-                datosFinancieros.ahorroTotal
+                datosFinancieros.ahorroAlcancias
               )}
               {" "}de{" "}
               {formatearDinero(
-                datosFinancieros.valorObjetivoTotal
+                datosFinancieros.objetivoAlcancias
               )}
             </span>
 
@@ -1267,7 +1350,7 @@ function Dashboard({
 }
 
 // ============================================================
-// PASO 36: EXPORTAR DASHBOARD
+// PASO 21: EXPORTAR DASHBOARD
 // ============================================================
 
 export default Dashboard;
