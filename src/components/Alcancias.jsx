@@ -180,6 +180,18 @@ function Alcancias({ sesion, onVolver }) {
     };
   };
 
+  /*
+   * CARGAR ALCANCÍAS Y TODOS SUS MOVIMIENTOS
+   *
+   * Antes solamente se cargaban las alcancías.
+   * Los movimientos quedaban vacíos después de recargar
+   * la página y por eso el saldo aparecía nuevamente en $0.
+   *
+   * Ahora cargamos:
+   * 1. Todas las alcancías del usuario.
+   * 2. Todos los aportes y retiros del usuario.
+   * 3. Organizamos los movimientos por alcancia_id.
+   */
   const cargarAlcancias = async () => {
     if (!usuarioId) return;
 
@@ -206,8 +218,66 @@ function Alcancias({ sesion, onVolver }) {
       );
 
       setAlcancias([]);
+      setMovimientos({});
+      setCargando(false);
+
+      return;
+    }
+
+    setAlcancias(data || []);
+
+    const {
+      data: movimientosData,
+      error: errorMovimientos,
+    } = await supabase
+      .from("movimientos_alcancia")
+      .select("*")
+      .eq("usuario_id", usuarioId)
+      .order("fecha", {
+        ascending: false,
+      })
+      .order("created_at", {
+        ascending: false,
+      });
+
+    if (errorMovimientos) {
+      console.error(
+        "Error cargando movimientos de alcancías:",
+        errorMovimientos
+      );
+
+      setError(
+        "Tus alcancías se cargaron, pero no fue posible cargar sus movimientos."
+      );
+
+      setMovimientos({});
     } else {
-      setAlcancias(data || []);
+      const movimientosPorAlcancia = {};
+
+      (movimientosData || []).forEach(
+        (movimiento) => {
+          const alcanciaId =
+            movimiento.alcancia_id;
+
+          if (
+            !movimientosPorAlcancia[
+              alcanciaId
+            ]
+          ) {
+            movimientosPorAlcancia[
+              alcanciaId
+            ] = [];
+          }
+
+          movimientosPorAlcancia[
+            alcanciaId
+          ].push(movimiento);
+        }
+      );
+
+      setMovimientos(
+        movimientosPorAlcancia
+      );
     }
 
     setCargando(false);
