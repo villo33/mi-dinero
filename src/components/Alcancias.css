@@ -1,15 +1,17 @@
 .alcancias-page {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 32%),
-    linear-gradient(180deg, #f4f7fb 0%, #eef3f9 100%);
-  padding: 30px 20px 50px;
+  padding: 32px 20px 60px;
   box-sizing: border-box;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(37, 99, 235, 0.09), transparent 28%),
+    radial-gradient(circle at 95% 8%, rgba(14, 165, 233, 0.08), transparent 25%),
+    linear-gradient(180deg, #f6f9fc 0%, #eef3f8 100%);
+  color: #0f172a;
 }
 
 .alcancias-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
 }
 
@@ -21,91 +23,110 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 28px;
+  gap: 24px;
+  margin-bottom: 30px;
 }
 
-.alcancias-header h1 {
-  margin: 10px 0 6px;
-  color: #0b1f3a;
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: -0.7px;
-}
-
-.alcancias-header p {
-  margin: 0;
-  color: #64748b;
-  font-size: 15px;
-  line-height: 1.5;
+.alcancias-header > div:first-child {
+  min-width: 0;
 }
 
 .alcancias-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
   border: none;
   background: transparent;
-  padding: 0;
   color: #2563eb;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 800;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .alcancias-back-button:hover {
   color: #1d4ed8;
-  text-decoration: underline;
+  transform: translateX(-2px);
+}
+
+.alcancias-header h1 {
+  margin: 10px 0 7px;
+  color: #0b1f3a;
+  font-size: clamp(27px, 4vw, 35px);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.alcancias-header p {
+  max-width: 650px;
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 /* ============================================================
-   BOTONES
+   BOTONES GENERALES
    ============================================================ */
 
 .alcancias-primary-button,
 .alcancias-secondary-button {
-  min-height: 44px;
-  border-radius: 11px;
-  padding: 10px 17px;
-  font-size: 14px;
-  font-weight: 700;
+  min-height: 45px;
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
   cursor: pointer;
   transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .alcancias-primary-button {
   border: 1px solid #2563eb;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
   box-shadow:
-    0 7px 18px rgba(37, 99, 235, 0.20);
+    0 8px 18px rgba(37, 99, 235, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .alcancias-primary-button:hover {
-  background: linear-gradient(135deg, #1d4ed8, #1e40af);
   transform: translateY(-2px);
   box-shadow:
-    0 10px 24px rgba(37, 99, 235, 0.25);
+    0 12px 26px rgba(37, 99, 235, 0.27),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .alcancias-secondary-button {
-  border: 1px solid #d7dee9;
-  background: white;
+  border: 1px solid #dbe3ec;
+  background: rgba(255, 255, 255, 0.95);
   color: #334155;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.035);
 }
 
 .alcancias-secondary-button:hover {
+  transform: translateY(-1px);
   border-color: #cbd5e1;
   background: #f8fafc;
-  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(15, 23, 42, 0.06);
+}
+
+.alcancias-primary-button:active,
+.alcancias-secondary-button:active {
+  transform: translateY(0);
 }
 
 .alcancias-primary-button:disabled,
 .alcancias-secondary-button:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -116,12 +137,14 @@
    ============================================================ */
 
 .alcancias-message {
-  margin-bottom: 20px;
-  padding: 14px 16px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  position: relative;
+  margin-bottom: 22px;
+  padding: 14px 17px;
+  border-radius: 13px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  box-shadow: 0 5px 16px rgba(15, 23, 42, 0.05);
 }
 
 .alcancias-message.success {
@@ -132,7 +155,7 @@
 
 .alcancias-message.error {
   border: 1px solid #fecaca;
-  background: linear-gradient(135deg, #fef2f2, #fff1f2);
+  background: linear-gradient(135deg, #fff7f7, #fef2f2);
   color: #b91c1c;
 }
 
@@ -143,41 +166,57 @@
 .alcancias-resumen {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  gap: 15px;
   margin-bottom: 28px;
 }
 
 .alcancia-resumen-card {
   position: relative;
-  min-height: 108px;
-  padding: 19px;
-  box-sizing: border-box;
+  min-height: 112px;
+  padding: 20px;
   overflow: hidden;
-  border: 1px solid #e1e8f0;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.96);
+  box-sizing: border-box;
+  border: 1px solid #e2e8f0;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.94);
   box-shadow:
-    0 7px 22px rgba(15, 23, 42, 0.055);
+    0 8px 25px rgba(15, 23, 42, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.alcancia-resumen-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 42px;
+  height: 3px;
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
 }
 
 .alcancia-resumen-card::after {
   content: "";
   position: absolute;
-  right: -25px;
-  bottom: -35px;
-  width: 90px;
-  height: 90px;
+  right: -35px;
+  bottom: -42px;
+  width: 105px;
+  height: 105px;
   border-radius: 50%;
   background: rgba(37, 99, 235, 0.045);
+  pointer-events: none;
 }
 
 .alcancia-resumen-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  border-color: #d5dfeb;
   box-shadow:
-    0 11px 28px rgba(15, 23, 42, 0.08);
+    0 14px 32px rgba(15, 23, 42, 0.085),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .alcancia-resumen-card span {
@@ -186,8 +225,8 @@
   display: block;
   margin-bottom: 8px;
   color: #64748b;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .alcancia-resumen-card strong {
@@ -195,9 +234,9 @@
   z-index: 1;
   display: block;
   color: #0b1f3a;
-  font-size: 23px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
+  font-size: clamp(19px, 2.2vw, 24px);
+  font-weight: 900;
+  letter-spacing: -0.5px;
 }
 
 /* ============================================================
@@ -205,41 +244,60 @@
    ============================================================ */
 
 .alcancias-empty {
-  padding: 60px 25px;
+  position: relative;
+  padding: 70px 25px;
+  overflow: hidden;
   border: 1px solid #e1e8f0;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.97);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.06), transparent 40%),
+    rgba(255, 255, 255, 0.97);
   text-align: center;
   box-shadow:
-    0 10px 30px rgba(15, 23, 42, 0.055);
+    0 12px 35px rgba(15, 23, 42, 0.06);
+}
+
+.alcancias-empty::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100px;
+  height: 3px;
+  border-radius: 0 0 10px 10px;
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  transform: translateX(-50%);
 }
 
 .alcancias-empty-icon {
-  width: 78px;
-  height: 78px;
+  width: 82px;
+  height: 82px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 19px;
+  margin: 0 auto 20px;
   border: 1px solid #dbeafe;
   border-radius: 50%;
   background: linear-gradient(135deg, #eff6ff, #dbeafe);
-  font-size: 38px;
+  font-size: 40px;
   box-shadow:
-    0 8px 20px rgba(37, 99, 235, 0.10);
+    0 10px 24px rgba(37, 99, 235, 0.12);
 }
 
 .alcancias-empty h2 {
   margin: 0 0 9px;
   color: #0b1f3a;
-  font-size: 22px;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: -0.4px;
 }
 
 .alcancias-empty p {
-  max-width: 500px;
-  margin: 0 auto 23px;
+  max-width: 520px;
+  margin: 0 auto 24px;
   color: #64748b;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.65;
 }
 
 /* ============================================================
@@ -252,20 +310,24 @@
   gap: 20px;
 }
 
+/* ============================================================
+   TARJETA DE ALCANCÍA
+   ============================================================ */
+
 .alcancia-card {
   position: relative;
   padding: 22px;
   overflow: hidden;
+  box-sizing: border-box;
   border: 1px solid #e0e7ef;
-  border-radius: 18px;
+  border-radius: 19px;
   background: rgba(255, 255, 255, 0.98);
   box-shadow:
-    0 8px 26px rgba(15, 23, 42, 0.06);
-  box-sizing: border-box;
+    0 9px 27px rgba(15, 23, 42, 0.06);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
 }
 
 .alcancia-card::before {
@@ -274,16 +336,15 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 3px;
+  height: 4px;
   background: linear-gradient(90deg, #2563eb, #60a5fa);
-  opacity: 0.9;
 }
 
 .alcancia-card:hover {
-  transform: translateY(-2px);
-  border-color: #d5dfeb;
+  transform: translateY(-3px);
+  border-color: #d4deea;
   box-shadow:
-    0 13px 32px rgba(15, 23, 42, 0.085);
+    0 16px 37px rgba(15, 23, 42, 0.09);
 }
 
 /* ============================================================
@@ -294,17 +355,19 @@
   border-color: #86efac;
   background:
     radial-gradient(
-      circle at top right,
-      rgba(34, 197, 94, 0.10),
+      circle at 100% 0%,
+      rgba(34, 197, 94, 0.11),
       transparent 35%
     ),
-    linear-gradient(
-      145deg,
-      #ffffff 0%,
-      #f0fdf4 100%
-    );
+    linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%);
   box-shadow:
-    0 10px 30px rgba(34, 197, 94, 0.12);
+    0 12px 32px rgba(34, 197, 94, 0.13);
+}
+
+.alcancia-card-completada:hover {
+  border-color: #4ade80;
+  box-shadow:
+    0 17px 40px rgba(34, 197, 94, 0.16);
 }
 
 .alcancia-card-completada::before {
@@ -343,12 +406,18 @@
   gap: 15px;
 }
 
+.alcancia-card-top > div:first-child {
+  min-width: 0;
+}
+
 .alcancia-card-top h2 {
   margin: 8px 0 0;
+  overflow-wrap: anywhere;
   color: #0b1f3a;
   font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
 }
 
 .alcancia-card-completada .alcancia-card-top h2 {
@@ -358,10 +427,14 @@
 .alcancia-status {
   display: inline-flex;
   align-items: center;
-  padding: 5px 10px;
+  justify-content: center;
+  min-height: 23px;
+  padding: 4px 10px;
+  box-sizing: border-box;
   border-radius: 999px;
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
   white-space: nowrap;
 }
 
@@ -391,6 +464,7 @@
 
 .alcancia-card-actions {
   display: flex;
+  flex-shrink: 0;
   gap: 6px;
 }
 
@@ -400,27 +474,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   border: 1px solid #e2e8f0;
-  border-radius: 9px;
-  background: white;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
   color: #475569;
-  cursor: pointer;
   font-size: 15px;
+  cursor: pointer;
   transition:
     background 0.18s ease,
     border-color 0.18s ease,
-    transform 0.18s ease;
+    color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .alcancia-icon-button:hover {
-  background: #f8fafc;
+  transform: translateY(-2px);
   border-color: #cbd5e1;
-  transform: translateY(-1px);
+  background: #f8fafc;
+  color: #0f172a;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
 }
 
 .alcancia-icon-button.danger:hover {
-  background: #fef2f2;
   border-color: #fecaca;
+  background: #fef2f2;
   color: #dc2626;
 }
 
@@ -431,8 +510,8 @@
 .alcancia-description {
   margin: 15px 0 0;
   color: #64748b;
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 /* ============================================================
@@ -442,15 +521,28 @@
 .alcancia-values {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 15px;
+  gap: 12px;
   margin-top: 20px;
 }
 
 .alcancia-values > div {
-  padding: 14px;
+  position: relative;
+  padding: 15px;
+  overflow: hidden;
   border: 1px solid #edf1f5;
-  border-radius: 12px;
+  border-radius: 13px;
   background: linear-gradient(135deg, #f8fafc, #f5f8fc);
+}
+
+.alcancia-values > div::after {
+  content: "";
+  position: absolute;
+  right: -17px;
+  bottom: -17px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.04);
 }
 
 .alcancia-card-completada .alcancia-values > div {
@@ -464,15 +556,16 @@
   display: block;
   margin-bottom: 5px;
   color: #64748b;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .alcancia-values strong {
   display: block;
   color: #0b1f3a;
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 900;
+  letter-spacing: -0.3px;
 }
 
 .alcancia-card-completada .alcancia-values strong {
@@ -489,16 +582,18 @@
   margin-top: 18px;
   overflow: hidden;
   border-radius: 999px;
-  background: #e8eef5;
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);
+  background: #e7edf4;
+  box-shadow:
+    inset 0 1px 2px rgba(15, 23, 42, 0.06);
 }
 
 .alcancia-progress-fill {
   height: 100%;
+  min-width: 0;
   border-radius: inherit;
   background: linear-gradient(90deg, #2563eb, #60a5fa);
-  box-shadow: 0 2px 7px rgba(37, 99, 235, 0.20);
-  transition: width 0.35s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.22);
+  transition: width 0.4s ease;
 }
 
 .alcancia-progress-completed {
@@ -521,9 +616,8 @@
     );
   background-size: 200% 100%;
   box-shadow:
-    0 3px 10px rgba(34, 197, 94, 0.28);
-  animation:
-    alcanciaProgresoCompletado 2.8s linear infinite;
+    0 3px 11px rgba(34, 197, 94, 0.28);
+  animation: alcanciaProgresoCompletado 2.8s linear infinite;
 }
 
 @keyframes alcanciaProgresoCompletado {
@@ -547,19 +641,20 @@
 .alcancia-progress-info strong {
   color: #2563eb;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .alcancia-progress-info span {
   color: #64748b;
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 600;
   text-align: right;
 }
 
 .alcancia-progress-info-completed {
   padding: 7px 10px;
   border-radius: 9px;
-  background: rgba(220, 252, 231, 0.75);
+  background: rgba(220, 252, 231, 0.78);
 }
 
 .alcancia-progress-info-completed strong {
@@ -569,58 +664,54 @@
 
 .alcancia-progress-info-completed span {
   color: #166534;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 /* ============================================================
-   CELEBRACIÓN DEL OBJETIVO
+   CELEBRACIÓN
    ============================================================ */
 
 .alcancia-celebracion {
   position: relative;
   margin-top: 18px;
-  padding: 24px 18px 21px;
+  padding: 25px 18px 21px;
   overflow: hidden;
   border: 1px solid #86efac;
   border-radius: 18px;
   background:
     radial-gradient(
       circle at 50% 0%,
-      rgba(250, 204, 21, 0.22),
-      transparent 34%
+      rgba(250, 204, 21, 0.23),
+      transparent 35%
     ),
-    linear-gradient(
-      135deg,
-      #f0fdf4 0%,
-      #dcfce7 50%,
-      #ecfdf5 100%
-    );
+    linear-gradient(135deg, #f0fdf4 0%, #dcfce7 52%, #ecfdf5 100%);
   text-align: center;
   box-shadow:
-    0 10px 28px rgba(34, 197, 94, 0.13);
-  animation:
-    alcanciaCelebracionEntrada 0.55s ease-out both;
+    0 11px 30px rgba(34, 197, 94, 0.14);
+  animation: alcanciaCelebracionEntrada 0.55s ease-out both;
 }
 
 .alcancia-celebracion::before,
 .alcancia-celebracion::after {
   content: "";
   position: absolute;
-  width: 85px;
-  height: 85px;
   border-radius: 50%;
   pointer-events: none;
 }
 
 .alcancia-celebracion::before {
-  top: -42px;
+  top: -43px;
   left: -35px;
+  width: 90px;
+  height: 90px;
   background: rgba(250, 204, 21, 0.13);
 }
 
 .alcancia-celebracion::after {
-  right: -35px;
-  bottom: -45px;
+  right: -38px;
+  bottom: -48px;
+  width: 100px;
+  height: 100px;
   background: rgba(34, 197, 94, 0.12);
 }
 
@@ -650,8 +741,7 @@
 
 .alcancia-celebracion-confeti span {
   display: inline-block;
-  animation:
-    alcanciaConfeti 2.4s ease-in-out infinite;
+  animation: alcanciaConfeti 2.4s ease-in-out infinite;
 }
 
 .alcancia-celebracion-confeti span:nth-child(2) {
@@ -681,38 +771,32 @@
 @keyframes alcanciaConfeti {
   0%,
   100% {
-    transform: translateY(0) rotate(0deg);
     opacity: 0.65;
+    transform: translateY(0) rotate(0deg);
   }
 
   50% {
-    transform: translateY(5px) rotate(12deg) scale(1.15);
     opacity: 1;
+    transform: translateY(5px) rotate(12deg) scale(1.15);
   }
 }
 
 .alcancia-celebracion-icon {
   position: relative;
   z-index: 2;
-  width: 74px;
-  height: 74px;
+  width: 76px;
+  height: 76px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 8px auto 11px;
   border: 2px solid rgba(255, 255, 255, 0.95);
   border-radius: 50%;
-  background:
-    linear-gradient(
-      135deg,
-      #ffffff,
-      #dcfce7
-    );
-  font-size: 38px;
+  background: linear-gradient(135deg, #ffffff, #dcfce7);
+  font-size: 39px;
   box-shadow:
-    0 8px 20px rgba(22, 101, 52, 0.15);
-  animation:
-    alcanciaCerdoCelebracion 2.2s ease-in-out infinite;
+    0 8px 22px rgba(22, 101, 52, 0.16);
+  animation: alcanciaCerdoCelebracion 2.2s ease-in-out infinite;
 }
 
 @keyframes alcanciaCerdoCelebracion {
@@ -737,7 +821,7 @@
   color: #15803d;
   font-size: 10px;
   font-weight: 900;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.6px;
 }
 
 .alcancia-celebracion-content h3 {
@@ -745,7 +829,7 @@
   color: #14532d;
   font-size: 25px;
   font-weight: 900;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.6px;
 }
 
 .alcancia-celebracion-content p {
@@ -760,7 +844,7 @@
   color: #15803d;
   font-size: 23px;
   font-weight: 900;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.4px;
 }
 
 .alcancia-celebracion-content small {
@@ -768,7 +852,7 @@
   margin-top: 7px;
   color: #4d7c5c;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* ============================================================
@@ -781,11 +865,9 @@
   border: 1px solid #dbeafe;
   border-radius: 14px;
   background:
-    linear-gradient(
-      135deg,
-      #f8fbff 0%,
-      #eff6ff 100%
-    );
+    linear-gradient(135deg, #f8fbff 0%, #eff6ff 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .alcancia-plan-header {
@@ -796,15 +878,15 @@
   display: block;
   color: #0b1f3a;
   font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.2px;
+  font-weight: 900;
 }
 
 .alcancia-plan-header span {
   display: block;
   margin-top: 3px;
   color: #64748b;
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .alcancia-plan-grid {
@@ -815,8 +897,8 @@
 
 .alcancia-plan-item {
   padding: 11px 9px;
-  border: 1px solid rgba(219, 234, 254, 0.9);
-  border-radius: 10px;
+  border: 1px solid rgba(219, 234, 254, 0.95);
+  border-radius: 11px;
   background: rgba(255, 255, 255, 0.82);
 }
 
@@ -824,22 +906,22 @@
   display: block;
   margin-bottom: 4px;
   color: #64748b;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 800;
 }
 
 .alcancia-plan-item strong {
   display: block;
   color: #1d4ed8;
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 900;
 }
 
 .alcancia-plan-ahorro > p {
   margin: 12px 0 0;
   color: #475569;
-  font-size: 12px;
-  line-height: 1.45;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
 /* ============================================================
@@ -849,7 +931,7 @@
 .alcancia-details {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 15px;
+  gap: 13px;
   margin-top: 18px;
   padding-top: 17px;
   border-top: 1px solid #edf1f5;
@@ -857,7 +939,8 @@
 
 .alcancia-details strong {
   color: #334155;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .alcancia-card-completada .alcancia-details {
@@ -884,6 +967,7 @@
 .alcancia-card-buttons
 .alcancias-secondary-button {
   flex: 1;
+  min-width: 145px;
 }
 
 /* ============================================================
@@ -900,12 +984,13 @@
   margin: 0 0 13px;
   color: #0b1f3a;
   font-size: 15px;
+  font-weight: 900;
 }
 
 .alcancia-historial > p {
   margin: 0;
   color: #64748b;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .alcancia-historial-lista {
@@ -917,8 +1002,18 @@
 .alcancia-movimiento-item {
   padding: 12px 13px;
   border: 1px solid #e7edf3;
-  border-radius: 11px;
+  border-radius: 12px;
   background: linear-gradient(135deg, #f8fafc, #f5f8fb);
+  transition:
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.alcancia-movimiento-item:hover {
+  transform: translateY(-1px);
+  border-color: #d9e2eb;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
 }
 
 .alcancia-movimiento-item > div {
@@ -929,7 +1024,8 @@
 }
 
 .alcancia-movimiento-item strong {
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 900;
 }
 
 .alcancia-movimiento-item.aporte strong {
@@ -942,14 +1038,15 @@
 
 .alcancia-movimiento-item span {
   color: #64748b;
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .alcancia-movimiento-item p {
   margin: 6px 0 0;
   color: #64748b;
-  font-size: 12px;
-  line-height: 1.4;
+  font-size: 11px;
+  line-height: 1.45;
 }
 
 .alcancia-movimiento-actions {
@@ -978,23 +1075,47 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(15, 23, 42, 0.60);
-  backdrop-filter: blur(4px);
   box-sizing: border-box;
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(6px);
+  animation: alcanciaOverlayEntrada 0.2s ease-out both;
+}
+
+@keyframes alcanciaOverlayEntrada {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .alcancias-modal {
   width: 100%;
-  max-width: 520px;
+  max-width: 530px;
   max-height: 92vh;
   overflow-y: auto;
-  padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  border-radius: 19px;
-  background: white;
-  box-shadow:
-    0 25px 70px rgba(15, 23, 42, 0.28);
+  padding: 25px;
   box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow:
+    0 28px 80px rgba(15, 23, 42, 0.30);
+  animation: alcanciaModalEntrada 0.25s ease-out both;
+}
+
+@keyframes alcanciaModalEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .alcancias-modal-header {
@@ -1002,46 +1123,57 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 15px;
-  margin-bottom: 23px;
+  margin-bottom: 24px;
+}
+
+.alcancias-modal-header > div {
+  min-width: 0;
 }
 
 .alcancias-modal-header span {
   color: #2563eb;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
 }
 
 .alcancias-modal-header h2 {
   margin: 5px 0 0;
   color: #0b1f3a;
   font-size: 22px;
-  letter-spacing: -0.3px;
+  font-weight: 900;
+  letter-spacing: -0.4px;
 }
 
 .alcancias-modal-header p {
-  margin: 5px 0 0;
+  margin: 6px 0 0;
   color: #64748b;
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .alcancias-modal-header > button {
-  width: 35px;
-  height: 35px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   border: 1px solid #e2e8f0;
-  border-radius: 9px;
-  background: white;
+  border-radius: 10px;
+  background: #ffffff;
   color: #475569;
-  font-size: 23px;
+  font-size: 22px;
   line-height: 1;
   cursor: pointer;
   transition:
     background 0.18s ease,
-    color 0.18s ease;
+    color 0.18s ease,
+    border-color 0.18s ease;
 }
 
 .alcancias-modal-header > button:hover {
+  border-color: #cbd5e1;
   background: #f8fafc;
   color: #0f172a;
 }
@@ -1058,8 +1190,8 @@
   display: block;
   margin-bottom: 7px;
   color: #334155;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .alcancias-form-group label small {
@@ -1070,15 +1202,15 @@
 .alcancias-form-group input,
 .alcancias-form-group textarea {
   width: 100%;
+  box-sizing: border-box;
   padding: 12px 13px;
   border: 1px solid #d8e0e9;
-  border-radius: 10px;
+  border-radius: 11px;
   outline: none;
-  background: white;
+  background: #ffffff;
   color: #0f172a;
   font-family: inherit;
-  font-size: 14px;
-  box-sizing: border-box;
+  font-size: 13px;
   transition:
     border-color 0.18s ease,
     box-shadow 0.18s ease,
@@ -1086,19 +1218,24 @@
 }
 
 .alcancias-form-group input {
-  min-height: 45px;
+  min-height: 46px;
 }
 
 .alcancias-form-group textarea {
+  min-height: 88px;
   resize: vertical;
-  min-height: 85px;
+}
+
+.alcancias-form-group input:hover,
+.alcancias-form-group textarea:hover {
+  border-color: #cbd5e1;
 }
 
 .alcancias-form-group input:focus,
 .alcancias-form-group textarea:focus {
   border-color: #60a5fa;
   box-shadow:
-    0 0 0 3px rgba(96, 165, 250, 0.15);
+    0 0 0 3px rgba(96, 165, 250, 0.14);
 }
 
 .alcancias-form-group input:disabled,
@@ -1111,8 +1248,8 @@
   display: block;
   margin-top: 6px;
   color: #94a3b8;
-  font-size: 11px;
-  line-height: 1.4;
+  font-size: 10px;
+  line-height: 1.45;
 }
 
 /* ============================================================
@@ -1122,20 +1259,21 @@
 .alcancia-movimiento-resumen {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 11px;
   margin-bottom: 20px;
 }
 
 .alcancia-movimiento-resumen > div {
   padding: 13px;
   border: 1px solid #edf1f5;
-  border-radius: 11px;
-  background: #f8fafc;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f8fafc, #f5f8fb);
 }
 
 .alcancia-movimiento-resumen strong {
   color: #0b1f3a;
   font-size: 17px;
+  font-weight: 900;
 }
 
 /* ============================================================
@@ -1149,22 +1287,26 @@
 }
 
 .alcancia-tipo-button {
-  min-height: 43px;
+  min-height: 45px;
   border: 1px solid #d8e0e9;
-  border-radius: 10px;
-  background: white;
+  border-radius: 11px;
+  background: #ffffff;
   color: #475569;
-  font-weight: 700;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
   cursor: pointer;
   transition:
     background 0.18s ease,
     border-color 0.18s ease,
     color 0.18s ease,
-    transform 0.18s ease;
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .alcancia-tipo-button:hover {
   transform: translateY(-1px);
+  border-color: #cbd5e1;
   background: #f8fafc;
 }
 
@@ -1172,12 +1314,14 @@
   border-color: #2563eb;
   background: #eff6ff;
   color: #2563eb;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.08);
 }
 
 .alcancia-tipo-button.active.retiro {
   border-color: #dc2626;
   background: #fef2f2;
   color: #dc2626;
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.08);
 }
 
 /* ============================================================
@@ -1188,7 +1332,12 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 23px;
+  margin-top: 24px;
+  padding-top: 4px;
+}
+
+.alcancias-modal-buttons button {
+  min-width: 115px;
 }
 
 /* ============================================================
@@ -1205,15 +1354,16 @@
 }
 
 .alcancias-loading p {
-  margin-top: 12px;
-  font-size: 14px;
+  margin-top: 13px;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE — TABLET
    ============================================================ */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .alcancias-resumen {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1223,46 +1373,85 @@
   }
 }
 
+/* ============================================================
+   RESPONSIVE — MÓVIL
+   ============================================================ */
+
 @media (max-width: 600px) {
   .alcancias-page {
-    padding: 20px 13px 35px;
+    padding: 20px 13px 38px;
   }
 
   .alcancias-header {
     align-items: stretch;
     flex-direction: column;
-    gap: 15px;
+    gap: 17px;
+    margin-bottom: 23px;
   }
 
   .alcancias-header h1 {
+    margin-top: 9px;
     font-size: 27px;
   }
 
-  .alcancias-header
-  .alcancias-primary-button {
+  .alcancias-header p {
+    font-size: 13px;
+  }
+
+  .alcancias-header .alcancias-primary-button {
     width: 100%;
   }
 
   .alcancias-resumen {
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 9px;
+    margin-bottom: 21px;
   }
 
   .alcancia-resumen-card {
-    min-height: 95px;
+    min-height: 94px;
     padding: 14px;
+    border-radius: 14px;
+  }
+
+  .alcancia-resumen-card::before {
+    left: 14px;
+  }
+
+  .alcancia-resumen-card span {
+    font-size: 10px;
   }
 
   .alcancia-resumen-card strong {
-    font-size: 18px;
+    font-size: 17px;
+  }
+
+  .alcancias-empty {
+    padding: 50px 18px;
+    border-radius: 18px;
+  }
+
+  .alcancias-empty-icon {
+    width: 72px;
+    height: 72px;
+    font-size: 35px;
+  }
+
+  .alcancias-empty h2 {
+    font-size: 20px;
+  }
+
+  .alcancias-empty p {
+    font-size: 13px;
   }
 
   .alcancia-card {
-    padding: 18px 17px;
+    padding: 18px 16px;
+    border-radius: 17px;
   }
 
   .alcancia-card-top {
-    gap: 10px;
+    gap: 9px;
   }
 
   .alcancia-card-top h2 {
@@ -1270,13 +1459,30 @@
   }
 
   .alcancia-card-actions {
-    flex-shrink: 0;
+    gap: 5px;
+  }
+
+  .alcancia-icon-button {
+    width: 34px;
+    height: 34px;
+  }
+
+  .alcancia-description {
+    font-size: 12px;
   }
 
   .alcancia-values,
   .alcancia-details {
     grid-template-columns: 1fr;
     gap: 9px;
+  }
+
+  .alcancia-values {
+    margin-top: 17px;
+  }
+
+  .alcancia-values > div {
+    padding: 13px;
   }
 
   .alcancia-plan-grid {
@@ -1292,6 +1498,17 @@
   .alcancia-card-buttons
   .alcancias-secondary-button {
     width: 100%;
+    min-width: 0;
+  }
+
+  .alcancia-progress-info {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .alcancia-progress-info span {
+    text-align: left;
   }
 
   .alcancia-celebracion {
@@ -1312,6 +1529,10 @@
     font-size: 20px;
   }
 
+  .alcancia-movimiento-item > div {
+    align-items: flex-start;
+  }
+
   .alcancias-modal-overlay {
     align-items: flex-end;
     padding: 0;
@@ -1320,19 +1541,32 @@
   .alcancias-modal {
     max-width: none;
     max-height: 94vh;
-    border-radius: 18px 18px 0 0;
-    padding: 20px 16px 25px;
+    padding: 21px 16px 27px;
+    border-radius: 19px 19px 0 0;
+  }
+
+  .alcancias-modal-header {
+    margin-bottom: 21px;
+  }
+
+  .alcancias-modal-header h2 {
+    font-size: 20px;
   }
 
   .alcancias-modal-buttons {
     flex-direction: column-reverse;
+    gap: 8px;
   }
 
-  .alcancias-modal-buttons
-  button {
+  .alcancias-modal-buttons button {
     width: 100%;
+    min-width: 0;
   }
 }
+
+/* ============================================================
+   RESPONSIVE — TELÉFONOS PEQUEÑOS
+   ============================================================ */
 
 @media (max-width: 390px) {
   .alcancias-resumen {
@@ -1340,10 +1574,14 @@
   }
 
   .alcancia-resumen-card {
-    min-height: 90px;
+    min-height: 88px;
   }
 
   .alcancia-movimiento-resumen {
+    grid-template-columns: 1fr;
+  }
+
+  .alcancia-tipo-buttons {
     grid-template-columns: 1fr;
   }
 
@@ -1356,13 +1594,29 @@
   }
 }
 
+/* ============================================================
+   ACCESIBILIDAD / MENOS MOVIMIENTO
+   ============================================================ */
+
 @media (prefers-reduced-motion: reduce) {
   .alcancia-card-completada::before,
   .alcancia-progress-completed .alcancia-progress-fill,
   .alcancia-celebracion,
   .alcancia-celebracion-confeti span,
-  .alcancia-celebracion-icon {
+  .alcancia-celebracion-icon,
+  .alcancias-modal-overlay,
+  .alcancias-modal {
     animation: none;
+  }
+
+  .alcancia-card,
+  .alcancia-resumen-card,
+  .alcancia-icon-button,
+  .alcancias-primary-button,
+  .alcancias-secondary-button,
+  .alcancia-movimiento-item,
+  .alcancia-tipo-button {
+    transition: none;
   }
 
   .alcancia-progress-fill {
